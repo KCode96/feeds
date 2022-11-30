@@ -9,11 +9,16 @@ import (
 func main() {
 	app := gin.Default()
 
-	app.GET("/", func(c *gin.Context) {
+	// Connect to the database
+
+	app.GET("/articles", func(c *gin.Context) {
 		c.JSON(http.StatusOK, gin.H{
 			"message": "Hello world!",
 		})
 	})
+
+	// Tags
+	app.GET("/tags")
 
 	app.Run(":8000")
 }

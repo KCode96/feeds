@@ -1,1 +1,16 @@
-FROM node
+FROM node:19.1.0-alpine3.16
+
+WORKDIR /app
+COPY package*.json .
+
+RUN yarn install
+RUN yarn build
+
+COPY . .
+
+ENV MONGO_URL=mongodb+srv://moon:moon123@cluster0.4colf4i.mongodb.net/myFirstDatabase?retryWrites=true&w=majority
+ENV JWT_SECRET=my_secret
+
+EXPOSE 4000
+
+CMD [ "yarn", "start" ]

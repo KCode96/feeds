@@ -27,7 +27,7 @@ export const loginUser = async ({ email, password }: Login) => {
     if (!user) throw new Error(`${email} is not registered yet`);
 
 
-    const isMatch = await user.matchPassword(password);
+    // const isMatch = await user.matchPassword(password);
 };
 
 export const forgotPassword = (email: string) => {};

@@ -1,9 +1,10 @@
 import Layout from '../components/Main/Layout';
+import HomeView from '../views/HomeView';
 
 export default function HomePage() {
     return (
         <Layout title="Feeds | Home">
-            <h1 className="text-3xl font-bold underline">Hello world!</h1>
+            <HomeView />
         </Layout>
     );
 }
