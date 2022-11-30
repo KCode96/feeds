@@ -20,14 +20,14 @@ export default function Layout({ children, title }: Props) {
             </Head>
             <Navbar navRef={navRef} />
             <main
-                className="container mx-auto py-12"
+                className="py-12 bg-gray-50"
                 style={{
                     minHeight: `calc(100vh - ${
                         navSize.height + footSize.height
                     }px)`,
                 }}
             >
-                {children}
+                <div className="container mx-auto ">{children}</div>
             </main>
             <Footer footRef={footRef} />
         </>

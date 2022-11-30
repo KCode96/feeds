@@ -16,8 +16,8 @@ export default function Navbar({ navRef }: Props) {
     const { pathname } = useRouter();
 
     return (
-        <nav className="container mx-auto" ref={navRef}>
-            <div className="flex justify-between py-4">
+        <nav className=" bg-gray-50" ref={navRef}>
+            <div className="container mx-auto flex justify-between py-4">
                 <Link href="/" className="text-2xl font-bold text-blue-600">
                     Feeds
                 </Link>
