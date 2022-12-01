@@ -10,7 +10,6 @@ export default function (app: Express) {
         '/register',
         validateRequest(authSchema.registerUser),
         async (req: Request, res: Response) => {
-
             const user = await authService.registerUser(req.body);
 
             res.status(201).json({ success: true, data: user, message: '' });
@@ -26,7 +25,7 @@ export default function (app: Express) {
 
             res.status(200).json({
                 success: true,
-                message: '',
+                token,
             });
         }
     );

@@ -12,7 +12,7 @@ type Login = {
 };
 
 export const registerUser = async ({ username, email, password }: Register) => {
-    const user = await User.findOne({ email });
+    const user = await User.findOne({ email }).select('-password');
 
     if (user) throw new Error(`${email} already registered`);
 
@@ -22,12 +22,17 @@ export const registerUser = async ({ username, email, password }: Register) => {
 };
 
 export const loginUser = async ({ email, password }: Login) => {
-    const user = await User.findOne({ email });
+    const user = await User.findOne({ email }).select('-password');
 
     if (!user) throw new Error(`${email} is not registered yet`);
 
+    const isMatch = await user.matchPassword(password);
 
-    // const isMatch = await user.matchPassword(password);
+    if (!isMatch) throw new Error(`Invalid credentials`);
+
+    const token = user.getSignedJwtToken(user.id);
+
+    return token;
 };
 
 export const forgotPassword = (email: string) => {};

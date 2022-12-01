@@ -1,24 +1,25 @@
 package main
 
 import (
-	"net/http"
+	"feeds-articles/api"
+	"feeds-articles/models"
 
 	"github.com/gin-gonic/gin"
 )
 
 func main() {
-	app := gin.Default()
+	r := gin.New()
+
+	// Middlewares
+	r.Use(gin.Logger())
+	r.Use(gin.Recovery())
 
 	// Connect to the database
+	models.ConnectDB()
 
-	app.GET("/articles", func(c *gin.Context) {
-		c.JSON(http.StatusOK, gin.H{
-			"message": "Hello world!",
-		})
-	})
+	// Routes
+	api.TagRoute(r)
+	api.AritcleRoute(r)
 
-	// Tags
-	app.GET("/tags")
-
-	app.Run(":8000")
+	r.Run(":8000")
 }

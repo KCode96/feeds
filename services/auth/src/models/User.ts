@@ -9,19 +9,23 @@ const UserSchema = new mongoose.Schema(
         username: { type: String, required: true },
         email: { type: String, required: true, unique: true },
         password: { type: String, required: true },
+        role: { type: String, enum: ['user', 'admin'], default: 'user' },
         createdAt: { type: Date, default: Date.now },
         updatedAt: { type: Date, default: Date.now },
     },
-    { timestamps: true }
+    {
+        methods: {
+            matchPassword: async function (password: string) {
+                return await bcrypt.compare(password, this.password);
+            },
+            getSignedJwtToken: function (id: string) {
+                return jwt.sign({ id }, JWT_SECRET as string, {
+                    expiresIn: '30d',
+                });
+            },
+        },
+    }
 );
-
-UserSchema.methods.matchPassword = async function (password: string) {
-    return await bcrypt.compare(password, this.password);
-};
-
-UserSchema.methods.getSignedJwtToken = async function (id: string) {
-    return jwt.sign({ id }, JWT_SECRET as string, { expiresIn: '30d' });
-};
 
 UserSchema.pre('save', async function (next) {
     if (!this.isModified('password')) {
