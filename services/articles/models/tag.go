@@ -1,8 +1,6 @@
 package models
 
 type Tag struct {
-	ID string
-	name string
+	ID   string `gorm:"primaryKey"`
+	Name string
 }
-
-

@@ -11,6 +11,8 @@ func TagRoute(r *gin.Engine) {
 
 	r.GET(endpoint, controllers.GetTags)
 	r.POST(endpoint, controllers.CreateTag)
-	r.DELETE(endpoint, controllers.DeleteTag)
-	r.PUT(endpoint, controllers.UpdateTag)
+
+	r.GET(endpoint+"/:id", controllers.GetTag)
+	r.DELETE(endpoint+"/:id", controllers.DeleteTag)
+	r.PUT(endpoint+"/:id", controllers.UpdateTag)
 }
