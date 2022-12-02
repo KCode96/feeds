@@ -1,4 +1,5 @@
 import Input from './Input';
 import SubmitButton from './SubmitButton';
+import Textarea from './textarea';
 
-export { Input, SubmitButton as Button };
+export { Input, Textarea, SubmitButton as Button };
