@@ -2,6 +2,8 @@ node_modules
 
 .DS_Store
 
+# services -> articles
 ./services/articles/tmp
+./services/articles/.tmp
 
 
