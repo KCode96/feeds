@@ -1,5 +1,6 @@
-import { useSelector } from 'react-redux';
+import { useAppSelector } from '.';
+import { AuthState } from '../../features/authSlice';
 
-const useAuth = useSelector<any>(state => state.auth);
-
+const useAuth = () =>
+    useAppSelector<AuthState>(state => state.auth as AuthState);
 export default useAuth;

@@ -1,16 +1,12 @@
 FROM node:19.1.0-alpine3.16 
 
-RUN addgroup app && adduser -S -G app app
-USER app
-
 WORKDIR /app
 
-COPY package*.json ./
+COPY package*.json /app
 RUN yarn install
+
 COPY . .
 
-EXPOSE 3000 
+EXPOSE 3000
 
-CMD ["npm", "start"]
-
-
+CMD ["yarn", "dev"]

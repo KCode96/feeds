@@ -1,16 +1,17 @@
 FROM node:19.1.0-alpine3.16
 
 WORKDIR /app
-COPY package*.json .
 
+COPY package.json package-lock.json tsconfig.json ./
 RUN yarn install
-RUN yarn build
 
 COPY . .
 
-ENV MONGO_URL=mongodb+srv://moon:moon123@cluster0.4colf4i.mongodb.net/myFirstDatabase?retryWrites=true&w=majority
-ENV JWT_SECRET=my_secret
+RUN yarn global add ts-node
+RUN yarn global add typescript
 
-EXPOSE 4000
+EXPOSE 3001
 
-CMD [ "yarn", "start" ]
+CMD [ "yarn" , "dev"]
+
+

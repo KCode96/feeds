@@ -1,27 +1,21 @@
 version: '3.8'
 
 services:
-    web:
-        build: './client'
-        ports:
-            - 3000:3000
-        volumes:
-            - ./clinet:/app
-
-    api_auth:
+    # app:
+    #     build: './client'
+    #     ports:
+    #         - 3000:3000
+    #     volumes:
+    #        - ./client:/app
+    auth-server:
         build: './services/auth'
         ports:
-            - 3000:3000
+            - 3001:3001
+        environment:
+            MONGO_URL: mongodb+srv://moon:moon123@cluster0.4colf4i.mongodb.net/myFirstDatabase?retryWrites=true&w=majority
+            JWT_SECRET: my_secret
+            PORT: 3001
         volumes:
             - ./services/auth:/app
-        environment:
-            DB_URL: mongodb://db/feeds
-
-    db_auth_mongo:
-        image: mongo:4.0.28-xenial
-        ports:
-            - 27017:27017
-        volumes:
-            - feeds:/data/db
 volumes:
     feeds:

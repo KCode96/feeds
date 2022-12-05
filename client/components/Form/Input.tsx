@@ -1,10 +1,9 @@
 import React from 'react';
+import { InputHTMLAttributes } from 'react';
 
-type Props = {
-    type: string;
-    placeholder: string;
+interface Props extends InputHTMLAttributes<any> {
     className?: string;
-};
+}
 
 export default function Input(props: Props) {
     return (

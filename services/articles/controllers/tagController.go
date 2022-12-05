@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"feeds-articles/models"
+	"fmt"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -15,9 +16,16 @@ func CreateTag(c *gin.Context) {
 
 	c.Bind(&body)
 
-	tag := models.Tag{Name: body.Name}
+	if body.Name == "" {
+		c.JSON(http.StatusBadRequest, gin.H{"data": nil, "success": false, "message": "Name is empty"})
+		return
+	}
+
+	tag := &models.Tag{Name: body.Name}
 
 	result := models.DB.Create(&tag)
+
+	fmt.Println(result.Error)
 
 	if result.Error != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"data": nil, "success": false, "message": "Failed to create tag"})
@@ -34,7 +42,7 @@ func GetTag(c *gin.Context) {
 
 	result := models.DB.Find(&tag, id)
 
-	if result.Error != nil || result.RowsAffected == 0{
+	if result.Error != nil || result.RowsAffected == 0 {
 		c.JSON(http.StatusBadRequest, gin.H{"data": nil, "success": false, "message": "Unable to find tag with " + id})
 		return
 	}
@@ -46,26 +54,36 @@ func GetTag(c *gin.Context) {
 }
 
 func UpdateTag(c *gin.Context) {
-
-}
-
-func DeleteTag(c *gin.Context) {
 	id := c.Param("id")
 
-	tag := models.Tag{ID: id}
+	var tag models.Tag
 
-	// Find the tag with the given ID
-	findResult := models.DB.Find(&tag)
+	result := models.DB.First(&tag)
 
-	if findResult.Error != nil {
+	if result.Error != nil || result.RowsAffected == 0 {
 		c.JSON(http.StatusBadRequest, gin.H{"data": nil, "success": false, "message": "Unable to find tag with " + id})
 		return
 	}
 
-	result := models.DB.Delete(&tag)
+	// Update the tag properties
+	tag.Name = "New"
 
-	if result.Error != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"data": nil, "success": false, "message": "Unable to delete tag with " + id})
+	models.DB.Save(&tag)
+
+	c.JSON(http.StatusCreated, gin.H{"success": true, "data": tag})
+}
+
+func DeleteTag(c *gin.Context) {
+
+	id := c.Param("id")
+
+	var tag models.Tag
+
+	// Find the tag with the given ID
+	result := models.DB.Delete(&tag, id)
+
+	if result.Error != nil || result.RowsAffected == 0 {
+		c.JSON(http.StatusBadRequest, gin.H{"data": nil, "success": false, "message": "Unable to find tag with " + id})
 		return
 	}
 

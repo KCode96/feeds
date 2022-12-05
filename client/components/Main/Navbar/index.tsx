@@ -1,6 +1,8 @@
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import React from 'react';
+import { useSelector } from 'react-redux';
+import { useAuth } from '../../../store/hooks';
 import AuthNav from './AuthNav';
 
 interface Props {
@@ -16,7 +18,7 @@ export default function Navbar({ navRef }: Props) {
 
     const { pathname } = useRouter();
 
-    const isAuth = true;
+    const { isAuthenticated } = useAuth();
 
     return (
         <nav className=" bg-gray-50" ref={navRef}>
@@ -25,7 +27,7 @@ export default function Navbar({ navRef }: Props) {
                     Feeds
                 </Link>
 
-                {isAuth ? (
+                {isAuthenticated ? (
                     <AuthNav pathname={pathname} />
                 ) : (
                     <div className="flex items-center text-lg">
@@ -34,9 +36,10 @@ export default function Navbar({ navRef }: Props) {
                                 href={`${target}`}
                                 key={id}
                                 className={`text-lg text-gray-600/50 mx-4 ${
-                                    target == pathname &&
-                                    'text-black hover:text-black'
-                                } hover:text-gray-500`}
+                                    target === pathname
+                                        ? 'text-black hover:text-black'
+                                        : 'hover:text-gray-500'
+                                }`}
                             >
                                 {title}
                             </Link>

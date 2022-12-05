@@ -22,11 +22,13 @@ export const registerUser = async ({ username, email, password }: Register) => {
 };
 
 export const loginUser = async ({ email, password }: Login) => {
-    const user = await User.findOne({ email }).select('-password');
+    const user = await User.findOne({ email });
 
     if (!user) throw new Error(`${email} is not registered yet`);
 
     const isMatch = await user.matchPassword(password);
+
+    console.log('Mach', isMatch);
 
     if (!isMatch) throw new Error(`Invalid credentials`);
 
