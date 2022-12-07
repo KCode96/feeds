@@ -12,12 +12,12 @@ export default function SignInView() {
     const handleClick = async () => {
         const res = await axios.get('http://localhost:3000/users', {});
 
-        // dispatch(
-        //     loginUser({
-        //         email: 'moon123@gmail.com',
-        //         password: 'test123',
-        //     })
-        // );
+        dispatch(
+            loginUser({
+                email: 'moon123@gmail.com',
+                password: 'test123',
+            })
+        );
     };
 
     return (

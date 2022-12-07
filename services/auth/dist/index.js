@@ -13,6 +13,6 @@ function startServer() {
     // Connect to database
     (0, models_1.connectDB)();
     (0, app_1.default)(app);
-    app.listen(config_1.PORT, () => console.log(`Listening on port ${config_1.PORT}`));
+    app.listen(3001, () => console.log(`Listening on port ${config_1.PORT}`));
 }
 startServer();

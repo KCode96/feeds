@@ -2,13 +2,13 @@ FROM node:19.1.0-alpine3.16
 
 WORKDIR /app
 
-COPY package.json package-lock.json tsconfig.json ./
+COPY package*.json tsconfig.json ./
 RUN yarn install
-
-COPY . .
 
 RUN yarn global add ts-node
 RUN yarn global add typescript
+
+COPY . .
 
 EXPOSE 3001
 

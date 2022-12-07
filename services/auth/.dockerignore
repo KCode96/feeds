@@ -1,12 +1,1 @@
-/node_modules
-
-# ERROR
-yarn-error.log
-
-
-# OS
-.DS_Store
-
-
-
-
+node_modules/

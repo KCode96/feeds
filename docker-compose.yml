@@ -1,12 +1,12 @@
 version: '3.8'
 
 services:
-    # app:
-    #     build: './client'
-    #     ports:
-    #         - 3000:3000
-    #     volumes:
-    #        - ./client:/app
+    app:
+        build: './client'
+        ports:
+            - 3000:3000
+        volumes:
+            - ./client:/app
     auth-server:
         build: './services/auth'
         ports:
@@ -16,6 +16,6 @@ services:
             JWT_SECRET: my_secret
             PORT: 3001
         volumes:
-            - ./services/auth:/app
+            - ./services/auth/:/app/data
 volumes:
     feeds:
