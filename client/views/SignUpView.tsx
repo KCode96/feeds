@@ -1,17 +1,18 @@
+import axios from 'axios';
 import Link from 'next/link';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 import { Input, Button } from '../components/Form';
 import { registerUser } from '../features/authSlice';
-import { useAppDispatch } from '../store/hooks';
+import { useAppDispatch, useAuth } from '../store/hooks';
 import { AuthTypes } from '../types';
 
 export default function SignUpView() {
     const [{ username, email, password }, setFormData] =
         useState<AuthTypes.RegisterUser>({
-            username: 'Hello',
-            email: 'Wold',
-            password: 'This',
+            username: 'kiwi',
+            email: 'kiwi123@gmail.com',
+            password: 'kiwi123',
         });
 
     const handleChange = (e: {
@@ -24,19 +25,45 @@ export default function SignUpView() {
             };
         });
     };
-    
+
     const dispatch = useAppDispatch();
 
     const handleClick = () => {
         dispatch(
             registerUser({
-                username: 'Kiwi',
-                email: 'kiwi@gmail.com',
-                password: 'kiwi123',
+                username,
+                email,
+                password,
             })
         );
     };
 
+    const { isLoading } = useAuth();
+
+    useEffect(() => {
+        fetchUsers();
+    }, []);
+    async function fetchUsers() {
+        try {
+            const res = await axios.post(
+                'http://localhost:3001/api/register',
+                {
+                    username: 'kaung',
+                    email: 'kaung@gmail.com',
+                    password: '122',
+                },
+                { headers: {} }
+            );
+            // const res = await axios.post('http://localhost:3001/api/register', {
+            //     username: 'Hello',
+            //     email: 'moon123@gmail.com',
+            //     password: 'test123',
+            // });
+            console.log(res.data);
+        } catch (err: any) {
+            console.log(err.message);
+        }
+    }
     return (
         <div className="flex flex-col items-center">
             <header className="text-center mb-6">
@@ -72,7 +99,11 @@ export default function SignUpView() {
                     onChange={handleChange}
                     value={password}
                 />
-                <Button title="Sign up" onClick={handleClick} />
+                <Button
+                    title="Sign up"
+                    onClick={handleClick}
+                    isLoading={isLoading}
+                />
             </form>
         </div>
     );

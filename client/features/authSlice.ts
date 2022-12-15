@@ -1,6 +1,23 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { authClient } from '../api/client';
 
+export const registerUser = createAsyncThunk(
+    '/auth/register',
+    async (
+        body: { username: string; email: string; password: string },
+        { rejectWithValue }
+    ) => {
+        try {
+            const res = await authClient.register(body);
+            console.log('auth', res);
+            return res.data;
+        } catch (err) {
+            console.log(err);
+            return rejectWithValue(err);
+        }
+    }
+);
+
 export const loginUser = createAsyncThunk(
     '/auth/login',
     async (body: { email: string; password: string }, { rejectWithValue }) => {
@@ -14,24 +31,11 @@ export const loginUser = createAsyncThunk(
     }
 );
 
-export const registerUser = createAsyncThunk(
-    '/auth/register',
-    async (
-        body: { username: string; email: string; password: string },
-        { rejectWithValue }
-    ) => {
-        try {
-            const res = await authClient.register(body);
-            console.log('auth', res);
-            return res;
-        } catch (err) {
-            return rejectWithValue(err);
-        }
-    }
-);
-
 export const logoutUser = createAsyncThunk('/auth/logout', async () => {});
-export const forgotPassword = createAsyncThunk('/auth/forgotPassword', async () => {});
+export const forgotPassword = createAsyncThunk(
+    '/auth/forgotPassword',
+    async () => {}
+);
 
 export interface AuthState {
     isAuthenticated: boolean;
@@ -54,7 +58,7 @@ export const authSlice = createSlice({
         },
     },
     extraReducers: builder => {
-        // Login 
+        // Login
         builder.addCase(loginUser.pending, (state, action) => {
             state.isLoading = true;
         });

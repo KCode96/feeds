@@ -5,14 +5,14 @@ import { validateRequest } from './middlewares';
 import { userSchema } from '../schemas';
 
 export default function (app: Express) {
-    app.get('/users', async (req: Request, res: Response) => {
+    app.get('/api/users', async (req: Request, res: Response) => {
         const users = await userService.getAllUsers();
 
         res.status(200).json({ message: '', data: users, success: true });
     });
 
     app.get(
-        '/users/:id',
+        '/api/users/:id',
         validateRequest(userSchema.getUser),
         async (req: Request, res: Response) => {
             const id = req.params.id;
@@ -23,7 +23,7 @@ export default function (app: Express) {
     );
 
     app.put(
-        '/users/:id',
+        '/api/users/:id',
         validateRequest(userSchema.getUser),
         async (req: Request, res: Response) => {}
     );

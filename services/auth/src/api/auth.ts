@@ -5,9 +5,11 @@ import { authSchema } from '../schemas';
 import { authService } from '../services';
 
 export default function (app: Express) {
+    console.log(app.request);
+
     // POST /register
     app.post(
-        '/register',
+        '/api/register',
         validateRequest(authSchema.registerUser),
         async (req: Request, res: Response) => {
             const user = await authService.registerUser(req.body);
@@ -18,7 +20,7 @@ export default function (app: Express) {
 
     // POST /login
     app.post(
-        '/login',
+        '/api/login',
         validateRequest(authSchema.loginUser),
         async (req: Request, res: Response) => {
             const token = await authService.loginUser(req.body);
@@ -32,7 +34,7 @@ export default function (app: Express) {
 
     // POST /forgot-password
     app.post(
-        '/forgot-password',
+        '/api/forgot-password',
         validateRequest(authSchema.forgotPassword),
         async (req: Request, res: Response) => {
             const email = req.body.email;

@@ -38,7 +38,11 @@ export default function SignInView() {
                     type="password"
                     className="mb-4"
                 />
-                <Button title="Sign in" onClick={handleClick} />
+                <Button
+                    title="Sign in"
+                    onClick={handleClick}
+                    isLoading={false}
+                />
             </form>
         </div>
     );

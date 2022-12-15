@@ -13,15 +13,15 @@ const services_1 = require("../services");
 const middlewares_1 = require("./middlewares");
 const schemas_1 = require("../schemas");
 function default_1(app) {
-    app.get('/users', (req, res) => __awaiter(this, void 0, void 0, function* () {
+    app.get('/api/users', (req, res) => __awaiter(this, void 0, void 0, function* () {
         const users = yield services_1.userService.getAllUsers();
         res.status(200).json({ message: '', data: users, success: true });
     }));
-    app.get('/users/:id', (0, middlewares_1.validateRequest)(schemas_1.userSchema.getUser), (req, res) => __awaiter(this, void 0, void 0, function* () {
+    app.get('/api/users/:id', (0, middlewares_1.validateRequest)(schemas_1.userSchema.getUser), (req, res) => __awaiter(this, void 0, void 0, function* () {
         const id = req.params.id;
         const user = yield services_1.userService.getUserById(id);
         res.status(200).json({ message: '', data: user, success: true });
     }));
-    app.put('/users/:id', (0, middlewares_1.validateRequest)(schemas_1.userSchema.getUser), (req, res) => __awaiter(this, void 0, void 0, function* () { }));
+    app.put('/api/users/:id', (0, middlewares_1.validateRequest)(schemas_1.userSchema.getUser), (req, res) => __awaiter(this, void 0, void 0, function* () { }));
 }
 exports.default = default_1;

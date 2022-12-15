@@ -1,4 +1,5 @@
 import express, { Express } from 'express';
+import cors from 'cors';
 
 import { user, auth } from './api';
 import { notFoundHandler, errorHandler } from './api/middlewares';

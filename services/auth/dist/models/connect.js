@@ -17,7 +17,6 @@ const mongoose_1 = __importDefault(require("mongoose"));
 const ansi_colors_1 = __importDefault(require("ansi-colors"));
 const config_1 = require("../config");
 const connectDB = () => __awaiter(void 0, void 0, void 0, function* () {
-    console.log(config_1.MONGO_URL);
     try {
         const con = yield mongoose_1.default.connect(config_1.MONGO_URL);
         console.log(ansi_colors_1.default.green('Connected to database!!!'));

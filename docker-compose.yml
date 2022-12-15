@@ -7,7 +7,7 @@ services:
             - 3000:3000
         volumes:
             - ./client:/app
-    auth-server:
+    auth-service:
         build: './services/auth'
         ports:
             - 3001:3001
@@ -17,5 +17,15 @@ services:
             PORT: 3001
         volumes:
             - ./services/auth/:/app/data
+    article-service:
+        build: './services/articles'
+        ports:
+            - 3002:3002
+        environment:
+            DB_URL: host=db-postgresql-syd1-96283-do-user-12994114-0.b.db.ondigitalocean.com user=doadmin password=AVNS_EU1LYCSS7HpHQRwitkM dbname=defaultdb port=25060 sslmode=require
+    #         PORT: 3002
+    #         JWT_SECRET: my_secret
+    #     volumes:
+    #         - ./services/articles/:/app
 volumes:
     feeds:
