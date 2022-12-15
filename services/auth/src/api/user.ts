@@ -1,4 +1,5 @@
 import { Request, Response, Express } from 'express';
+import cors from 'cors';
 
 import { userService } from '../services';
 import { validateRequest } from './middlewares';
@@ -13,6 +14,7 @@ export default function (app: Express) {
 
     app.get(
         '/api/users/:id',
+
         validateRequest(userSchema.getUser),
         async (req: Request, res: Response) => {
             const id = req.params.id;
@@ -24,6 +26,7 @@ export default function (app: Express) {
 
     app.put(
         '/api/users/:id',
+
         validateRequest(userSchema.getUser),
         async (req: Request, res: Response) => {}
     );

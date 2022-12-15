@@ -31,8 +31,16 @@ const UserSchema = new mongoose_1.default.Schema({
             });
         },
         getSignedJwtToken: function (id) {
-            console.log('helo', config_1.JWT_SECRET);
-            return jsonwebtoken_1.default.sign({ id }, config_1.JWT_SECRET, {
+            return jsonwebtoken_1.default.sign({
+                user: {
+                    id,
+                    username: this.username,
+                    email: this.email,
+                    role: this.role,
+                    createdAt: this.createdAt,
+                    updatedAt: this.updatedAt,
+                },
+            }, config_1.JWT_SECRET, {
                 expiresIn: '30d',
             });
         },

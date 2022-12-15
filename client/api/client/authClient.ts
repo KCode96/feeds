@@ -1,16 +1,9 @@
 import axios from 'axios';
+import { LoginUser, RegisterUser } from '../../types';
 
-const NEXT_AUTHURL = process.env.NEXT_AUTHURL;
+const NEXT_AUTHURL = process.env.NEXT_PUBLIC_AUTHURL;
 
-export async function register({
-    username,
-    email,
-    password,
-}: {
-    username: string;
-    email: string;
-    password: string;
-}) {
+export async function register({ username, email, password }: RegisterUser) {
     return await axios.post(`${NEXT_AUTHURL}/register`, {
         username,
         email,
@@ -18,13 +11,7 @@ export async function register({
     });
 }
 
-export async function login({
-    email,
-    password,
-}: {
-    email: string;
-    password: string;
-}) {
+export async function login({ email, password }: LoginUser) {
     return await axios.post(`${NEXT_AUTHURL}/login`, { email, password });
 }
 

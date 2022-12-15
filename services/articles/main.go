@@ -6,6 +6,8 @@ import (
 	"feeds-articles/models"
 	"os"
 
+	"github.com/gin-contrib/cors"
+
 	"github.com/gin-gonic/gin"
 )
 
@@ -17,6 +19,7 @@ func main() {
 	// Middlewares
 	r.Use(gin.Logger())
 	r.Use(gin.Recovery())
+	r.Use(cors.Default())
 
 	// Connect to the database
 	models.ConnectDB()

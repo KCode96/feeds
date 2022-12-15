@@ -1,9 +1,11 @@
-import React, { PropsWithChildren, useState } from 'react';
+import React, { PropsWithChildren, useEffect } from 'react';
 import Head from 'next/head';
 import { useElementSize } from 'usehooks-ts';
 
 import Navbar from './Navbar';
 import Footer from './Footer';
+import { useAppDispatch } from '../../store/hooks';
+import { authUser } from '../../features/authSlice';
 
 interface Props extends PropsWithChildren {
     title: string;
@@ -12,6 +14,14 @@ interface Props extends PropsWithChildren {
 export default function Layout({ children, title }: Props) {
     const [navRef, navSize] = useElementSize();
     const [footRef, footSize] = useElementSize();
+
+    const dispatch = useAppDispatch();
+    useEffect(() => {
+        const token = JSON.parse(localStorage.getItem('token') as string);
+        if (!token) return;
+
+        dispatch(authUser(token));
+    }, []);
 
     return (
         <>

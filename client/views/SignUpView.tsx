@@ -1,34 +1,36 @@
 import axios from 'axios';
 import Link from 'next/link';
-import React, { useEffect, useState } from 'react';
+import React, { FormEvent, useEffect, useState } from 'react';
 
 import { Input, Button } from '../components/Form';
 import { registerUser } from '../features/authSlice';
 import { useAppDispatch, useAuth } from '../store/hooks';
-import { AuthTypes } from '../types';
+import { RegisterUser } from '../types';
 
 export default function SignUpView() {
-    const [{ username, email, password }, setFormData] =
-        useState<AuthTypes.RegisterUser>({
+    const [{ username, email, password }, setFormData] = useState<RegisterUser>(
+        {
             username: 'kiwi',
             email: 'kiwi123@gmail.com',
             password: 'kiwi123',
-        });
+        }
+    );
 
-    const handleChange = (e: {
-        target: { name: string | number; value: any };
-    }) => {
-        setFormData(prevState => {
+    console.log(username);
+
+    const handleChange = (e: FormEvent) => {
+        const target = e.target as HTMLInputElement;
+        setFormData((prevState: any) => {
             return {
                 ...prevState,
-                [e.target.name]: e.target.value,
+                [target.name]: target.value,
             };
         });
     };
 
     const dispatch = useAppDispatch();
 
-    const handleClick = () => {
+    const handleSubmit = (e: FormEvent) => {
         dispatch(
             registerUser({
                 username,
@@ -40,30 +42,6 @@ export default function SignUpView() {
 
     const { isLoading } = useAuth();
 
-    useEffect(() => {
-        fetchUsers();
-    }, []);
-    async function fetchUsers() {
-        try {
-            const res = await axios.post(
-                'http://localhost:3001/api/register',
-                {
-                    username: 'kaung',
-                    email: 'kaung@gmail.com',
-                    password: '122',
-                },
-                { headers: {} }
-            );
-            // const res = await axios.post('http://localhost:3001/api/register', {
-            //     username: 'Hello',
-            //     email: 'moon123@gmail.com',
-            //     password: 'test123',
-            // });
-            console.log(res.data);
-        } catch (err: any) {
-            console.log(err.message);
-        }
-    }
     return (
         <div className="flex flex-col items-center">
             <header className="text-center mb-6">
@@ -80,8 +58,8 @@ export default function SignUpView() {
                     placeholder="Username"
                     type="text"
                     name="username"
-                    onChange={handleChange}
                     value={username}
+                    onChange={handleChange}
                 />
                 <Input
                     placeholder="Email"
@@ -100,8 +78,9 @@ export default function SignUpView() {
                     value={password}
                 />
                 <Button
+                    type="submit"
                     title="Sign up"
-                    onClick={handleClick}
+                    onClick={handleSubmit}
                     isLoading={isLoading}
                 />
             </form>

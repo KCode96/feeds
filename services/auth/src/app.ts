@@ -7,6 +7,7 @@ import { notFoundHandler, errorHandler } from './api/middlewares';
 const startApp = (app: Express) => {
     app.use(express.json());
     app.use(express.urlencoded({ extended: true }));
+    app.use(cors());
 
     auth(app);
     user(app);

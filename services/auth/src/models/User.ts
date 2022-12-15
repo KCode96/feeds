@@ -19,10 +19,22 @@ const UserSchema = new mongoose.Schema(
                 return await bcrypt.compare(password, this.password);
             },
             getSignedJwtToken: function (id: string) {
-                console.log('helo', JWT_SECRET);
-                return jwt.sign({ id }, JWT_SECRET as string, {
-                    expiresIn: '30d',
-                });
+                return jwt.sign(
+                    {
+                        user: {
+                            id,
+                            username: this.username,
+                            email: this.email,
+                            role: this.role,
+                            createdAt: this.createdAt,
+                            updatedAt: this.updatedAt,
+                        },
+                    },
+                    JWT_SECRET as string,
+                    {
+                        expiresIn: '30d',
+                    }
+                );
             },
         },
     }

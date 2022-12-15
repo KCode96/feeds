@@ -1,17 +1,29 @@
-import React from 'react';
+import React, { FormEvent, useState } from 'react';
 import Link from 'next/link';
 
 import { Input, Button } from '../components/Form';
 import { useAppDispatch } from '../store/hooks';
 import { loginUser } from '../features/authSlice';
-import axios from 'axios';
+import { LoginUser } from '../types';
 
 export default function SignInView() {
+    const [{ email, password }, setFormData] = useState<LoginUser>({
+        email: 'kiwi@gmail.com',
+        password: 'kiwi123',
+    });
+
     const dispatch = useAppDispatch();
 
-    const handleClick = async () => {
-        const res = await axios.get('http://localhost:3000/users', {});
+    const handleChange = (e: FormEvent) => {
+        console.log(e);
+        const target = e.target as HTMLInputElement;
 
+        setFormData(prevState => {
+            return { ...prevState, [target.name]: target.value };
+        });
+    };
+
+    const handleSubmit = async () => {
         dispatch(
             loginUser({
                 email: 'moon123@gmail.com',
@@ -32,15 +44,26 @@ export default function SignInView() {
                 </Link>
             </header>
             <form className="max-w-[500px]" onSubmit={e => e.preventDefault()}>
-                <Input placeholder="Email" type="email" className="my-4" />
+                <Input
+                    placeholder="Email"
+                    type="email"
+                    name="email"
+                    className="my-4"
+                    onChange={handleChange}
+                    value={email}
+                />
                 <Input
                     placeholder="Password"
                     type="password"
+                    value={password}
+                    name="password"
                     className="mb-4"
+                    onChange={handleChange}
                 />
                 <Button
+                    type="submit"
                     title="Sign in"
-                    onClick={handleClick}
+                    onClick={handleSubmit}
                     isLoading={false}
                 />
             </form>

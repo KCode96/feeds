@@ -9,11 +9,4 @@ type Data = {
 export default async function handler(
     req: NextApiRequest,
     res: NextApiResponse
-) {
-    const { data } = await axios.get('http://localhost:3001/api/users', {
-        headers: { origin: 'http://localhost:3001' },
-    });
-    console.log(data);
-
-    // res.status(200).json({ data });
-}
+) {}

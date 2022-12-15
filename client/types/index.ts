@@ -1,3 +1,1 @@
-import * as AuthTypes from './authType';
-
-export { AuthTypes };
+export type { RegisterUser, LoginUser, User } from './authType';
