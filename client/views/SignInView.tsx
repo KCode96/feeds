@@ -4,23 +4,31 @@ import { useRouter } from 'next/router';
 
 import { Input, Button } from 'components/Form';
 import { useAppDispatch, useAuth } from 'store/hooks';
-import { loginUser } from 'features/authSlice';
+import { loginUser, reset } from 'features/authSlice';
 import { Login } from 'types';
+import { toast } from 'react-toastify';
 
 export default function SignInView() {
     const [{ email, password }, setFormData] = useState<Login>({
-        email: 'kiwi@gmail.com',
-        password: 'kiwi123',
+        email: 'string!@gmail.com',
+        password: 'string',
     });
 
-    const { isLoading, isAuthenticated } = useAuth();
+    const { isLoading, isAuthenticated, error } = useAuth();
     const dispatch = useAppDispatch();
     const router = useRouter();
 
     useEffect(() => {
+        dispatch(reset());
+        
+        if (error) {
+            toast(error);
+            return;
+        }
+
         if (!isAuthenticated) return;
         router.push('/');
-    }, [isAuthenticated]);
+    }, [isAuthenticated, error]);
 
     const handleChange = (e: FormEvent) => {
         console.log(e);
@@ -34,8 +42,8 @@ export default function SignInView() {
     const handleSubmit = async () => {
         dispatch(
             loginUser({
-                email: 'moon123@gmail.com',
-                password: 'test123',
+                email,
+                password,
             })
         );
     };

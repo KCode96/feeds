@@ -25,7 +25,14 @@ export default function EditorPage() {
                     <Textarea
                         placeholder="Writte your article here"
                         className="my-4"
+                        onChange={undefined}
                     />
+                    <select className="select-primary">
+                        <option selected>Software</option>
+                        <option selected>New</option>
+                        <option selected>Sport</option>
+                        <option selected>Entertainment</option>
+                    </select>
                     <Button title="Publish Article" isLoading={false} />
                 </form>
             </div>

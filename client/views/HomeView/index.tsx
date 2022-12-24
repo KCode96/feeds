@@ -4,7 +4,7 @@ import PopularTags from './FeedPopularTags';
 
 export default function HomeView() {
     return (
-        <div className="sm:flex">
+        <div className="container mx-auto pt-4 pb-8 sm:flex">
             <PopularTags />
             <FeedSection />
         </div>

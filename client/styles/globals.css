@@ -7,3 +7,29 @@
         @apply bg-gray-50;
     }
 }
+
+@layer components {
+    .btn-primary {
+        @apply bg-blue-500 px-4 py-2 text-white rounded text-lg  hover:bg-blue-600;
+    }
+
+    .btn-secondary {
+        @apply border rounded px-3 py-1 text-sm flex items-center cursor-pointer border-gray-600/50 transition hover:bg-gray-600/10;
+    }
+
+    .input-primary {
+        @apply w-full border-[1.5px] border-gray-300/50 rounded px-4 py-2 outline-blue-500;
+    }
+
+    .link-primary {
+        @apply text-gray-600/50 hover:text-black/60 cursor-pointer;
+    }
+
+    .select-primary {
+        @apply block w-full py-2 px-3 rounded mb-4 outline-blue-500 border-[1.5px] border-gray-300/50;
+    }
+
+    .textarea-primary {
+        @apply w-full border-[1.5px] border-gray-300/50 rounded px-4 py-2 outline-blue-500;
+    }
+}

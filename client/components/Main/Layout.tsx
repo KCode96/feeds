@@ -1,6 +1,7 @@
 import React, { PropsWithChildren, useEffect } from 'react';
 import Head from 'next/head';
 import { useElementSize } from 'usehooks-ts';
+import { ToastContainer } from 'react-toastify';
 
 import Navbar from './Navbar';
 import Footer from './Footer';
@@ -36,21 +37,20 @@ export default function Layout({ children, title, guard }: Props) {
 
         dispatch(authUser(token));
 
-        if (guard) {
-            if (!token) router.push('/signin');
-        }
+        if (guard && !token) router.push('/signin');
 
         setChecking(false);
     }, [guard]);
 
     return (
         <>
+            <ToastContainer theme="light" />
             <Head>
                 <title>{title}</title>
             </Head>
             <Navbar navRef={navRef} />
             <main
-                className="py-12 bg-gray-50"
+                className=" bg-gray-50"
                 style={{
                     minHeight: `calc(100vh - ${
                         navSize.height + footSize.height
@@ -62,7 +62,7 @@ export default function Layout({ children, title, guard }: Props) {
                         <Loader />
                     </div>
                 ) : (
-                    <div className="container mx-auto ">{children}</div>
+                    children
                 )}
             </main>
             <Footer footRef={footRef} />

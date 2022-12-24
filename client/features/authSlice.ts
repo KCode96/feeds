@@ -1,20 +1,18 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 
 import { authClient } from 'api/client';
-import { InitialAuthState, User, Error } from 'types';
+import { InitialAuthState, User, Error, Register } from 'types';
 import { decodeToken, removeToken, storeToken } from 'utilities';
 
 export const registerUser = createAsyncThunk(
     '/auth/register',
-    async (
-        body: { username: string; email: string; password: string },
-        { rejectWithValue }
-    ) => {
+    async (body: Register, { rejectWithValue }) => {
         try {
             const res = await authClient.register(body);
             return res.data;
         } catch (err: any) {
-            return rejectWithValue(err.message);
+            const error = err.response.data.message;
+            return rejectWithValue(error);
         }
     }
 );
@@ -34,7 +32,8 @@ export const loginUser = createAsyncThunk(
 
             return user;
         } catch (err: any) {
-            return rejectWithValue(err.message);
+            const error = err.response.data.message;
+            return rejectWithValue(error);
         }
     }
 );
@@ -67,14 +66,15 @@ export const authSlice = createSlice({
     name: 'auth',
     initialState,
     reducers: {
-        reset(state, action) {
-            state = initialState;
+        reset(state) {
+            return (state = initialState);
         },
     },
     extraReducers: builder => {
         // Login
         builder.addCase(loginUser.pending, (state, action) => {
             state.isLoading = true;
+            state.error = null;
         });
         builder.addCase(loginUser.fulfilled, (state, action) => {
             state.isAuthenticated = true;
@@ -82,7 +82,6 @@ export const authSlice = createSlice({
             state.user = action.payload as User;
         });
         builder.addCase(loginUser.rejected, (state, action) => {
-            console.log(action);
             state.isLoading = false;
             state.error = action.payload as string;
         });
@@ -96,6 +95,7 @@ export const authSlice = createSlice({
         // Register
         builder.addCase(registerUser.pending, (state, action) => {
             state.isLoading = true;
+            state.error = null;
         });
         builder.addCase(registerUser.fulfilled, (state, action) => {
             state.isLoading = false;

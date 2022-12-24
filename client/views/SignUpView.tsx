@@ -2,18 +2,36 @@ import Link from 'next/link';
 import React, { FormEvent, useState } from 'react';
 
 import { Input, Button } from 'components/Form';
-import { registerUser } from 'features/authSlice';
+import { registerUser, reset } from 'features/authSlice';
 import { useAppDispatch, useAuth } from 'store/hooks';
 import { Register } from 'types';
+import { useRouter } from 'next/router';
+import { useEffect } from 'react';
+import { toast } from 'react-toastify';
 
 export default function SignUpView() {
+    const [isSubmitted, setIsSubmitted] = useState(false);
     const [{ username, email, password }, setFormData] = useState<Register>({
         username: 'kiwi',
         email: 'kiwi123@gmail.com',
         password: 'kiwi123',
     });
 
-    console.log(username);
+    const { isLoading, error } = useAuth();
+    const router = useRouter();
+    const dispatch = useAppDispatch();
+
+    useEffect(() => {
+        dispatch(reset());
+
+        if (error) {
+            toast(error);
+            setIsSubmitted(false);
+            return;
+        }
+
+        if (isSubmitted && !error) router.push('/signin');
+    }, [error]);
 
     const handleChange = (e: FormEvent) => {
         const target = e.target as HTMLInputElement;
@@ -25,9 +43,9 @@ export default function SignUpView() {
         });
     };
 
-    const dispatch = useAppDispatch();
-
     const handleSubmit = (e: FormEvent) => {
+        setIsSubmitted(true);
+
         dispatch(
             registerUser({
                 username,
@@ -36,8 +54,6 @@ export default function SignUpView() {
             })
         );
     };
-
-    const { isLoading, error } = useAuth();
 
     return (
         <>
