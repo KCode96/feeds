@@ -9,12 +9,15 @@ export default function (app: Express) {
     app.get('/api/users', async (req: Request, res: Response) => {
         const users = await userService.getAllUsers();
 
-        res.status(200).json({ message: '', data: users, success: true });
+        res.status(200).json({
+            message: '',
+            data: { users, usersCount: users.length ?? 0 },
+            success: true,
+        });
     });
 
     app.get(
         '/api/users/:id',
-
         validateRequest(userSchema.getUser),
         async (req: Request, res: Response) => {
             const id = req.params.id;
@@ -26,8 +29,31 @@ export default function (app: Express) {
 
     app.put(
         '/api/users/:id',
-
         validateRequest(userSchema.getUser),
-        async (req: Request, res: Response) => {}
+        async (req: Request, res: Response) => {
+            const id = req.params.id;
+            const update = await userService.updateUser(id, req.body);
+
+            res.status(200).json({
+                message: '',
+                data: update,
+                success: true,
+            });
+        }
+    );
+
+    app.delete(
+        '/api/users/:id',
+        validateRequest(userSchema.getUser),
+        async (req: Request, res: Response) => {
+            const id = req.params.id;
+            const user = await userService.deleteUser(id);
+
+            res.status(200).json({
+                message: '',
+                data: user,
+                success: true,
+            });
+        }
     );
 }

@@ -1,20 +1,17 @@
-import axios from 'axios';
 import Link from 'next/link';
-import React, { FormEvent, useEffect, useState } from 'react';
+import React, { FormEvent, useState } from 'react';
 
-import { Input, Button } from '../components/Form';
-import { registerUser } from '../features/authSlice';
-import { useAppDispatch, useAuth } from '../store/hooks';
-import { RegisterUser } from '../types';
+import { Input, Button } from 'components/Form';
+import { registerUser } from 'features/authSlice';
+import { useAppDispatch, useAuth } from 'store/hooks';
+import { Register } from 'types';
 
 export default function SignUpView() {
-    const [{ username, email, password }, setFormData] = useState<RegisterUser>(
-        {
-            username: 'kiwi',
-            email: 'kiwi123@gmail.com',
-            password: 'kiwi123',
-        }
-    );
+    const [{ username, email, password }, setFormData] = useState<Register>({
+        username: 'kiwi',
+        email: 'kiwi123@gmail.com',
+        password: 'kiwi123',
+    });
 
     console.log(username);
 
@@ -40,50 +37,56 @@ export default function SignUpView() {
         );
     };
 
-    const { isLoading } = useAuth();
+    const { isLoading, error } = useAuth();
 
     return (
-        <div className="flex flex-col items-center">
-            <header className="text-center mb-6">
-                <h1 className="text-3xl font-normal">Sign Up</h1>
-                <Link
-                    href="/signin"
-                    className="text-blue-600 hover:underline hover:text-blue-500"
+        <>
+            <div className="flex flex-col items-center">
+                <header className="text-center mb-6">
+                    <h1 className="text-3xl font-normal">Sign Up</h1>
+                    <Link
+                        href="/signin"
+                        className="text-blue-600 hover:underline hover:text-blue-500"
+                    >
+                        Have an account?
+                    </Link>
+                </header>
+                <form
+                    className="max-w-[500px]"
+                    onSubmit={e => e.preventDefault()}
                 >
-                    Have an account?
-                </Link>
-            </header>
-            <form className="max-w-[500px]">
-                <Input
-                    placeholder="Username"
-                    type="text"
-                    name="username"
-                    value={username}
-                    onChange={handleChange}
-                />
-                <Input
-                    placeholder="Email"
-                    type="email"
-                    className="my-4"
-                    name="email"
-                    onChange={handleChange}
-                    value={email}
-                />
-                <Input
-                    placeholder="Password"
-                    type="password"
-                    className="mb-4"
-                    name="password"
-                    onChange={handleChange}
-                    value={password}
-                />
-                <Button
-                    type="submit"
-                    title="Sign up"
-                    onClick={handleSubmit}
-                    isLoading={isLoading}
-                />
-            </form>
-        </div>
+                    <Input
+                        placeholder="Username"
+                        type="text"
+                        name="username"
+                        value={username}
+                        onChange={handleChange}
+                    />
+                    <Input
+                        placeholder="Email"
+                        type="email"
+                        className="my-4"
+                        name="email"
+                        onChange={handleChange}
+                        value={email}
+                    />
+                    <Input
+                        placeholder="Password"
+                        type="password"
+                        className="mb-4"
+                        name="password"
+                        onChange={handleChange}
+                        value={password}
+                    />
+                    <Button
+                        type="submit"
+                        title="Sign up"
+                        onClick={handleSubmit}
+                        isLoading={isLoading}
+                        disabled={isLoading}
+                    />
+                </form>
+            </div>
+        </>
     );
 }

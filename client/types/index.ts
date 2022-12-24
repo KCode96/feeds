@@ -1,1 +1,2 @@
-export type { RegisterUser, LoginUser, User } from './authType';
+export * from './authType';
+export * from './errorType';

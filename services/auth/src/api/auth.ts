@@ -12,7 +12,8 @@ export default function (app: Express) {
         '/api/register',
         validateRequest(authSchema.registerUser),
         async (req: Request, res: Response) => {
-            const user = await authService.registerUser(req.body);
+            console.log(req.body);
+            const user = await authService.register(req.body);
 
             res.status(201).json({ success: true, data: user, message: '' });
         }
@@ -23,7 +24,7 @@ export default function (app: Express) {
         '/api/login',
         validateRequest(authSchema.loginUser),
         async (req: Request, res: Response) => {
-            const token = await authService.loginUser(req.body);
+            const token = await authService.login(req.body);
 
             res.status(200).json({
                 success: true,

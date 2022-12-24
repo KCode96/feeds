@@ -4,24 +4,44 @@ import { useElementSize } from 'usehooks-ts';
 
 import Navbar from './Navbar';
 import Footer from './Footer';
-import { useAppDispatch } from '../../store/hooks';
-import { authUser } from '../../features/authSlice';
+import { useAppDispatch } from 'store/hooks';
+import { authUser } from 'features/authSlice';
+import { getToken } from 'utilities/token';
+import { useRouter } from 'next/router';
+import { useState } from 'react';
+import Loader from '../Loader';
 
 interface Props extends PropsWithChildren {
     title: string;
+    guard?: boolean;
 }
 
-export default function Layout({ children, title }: Props) {
+export default function Layout({ children, title, guard }: Props) {
+    const [checking, setChecking] = useState(true);
     const [navRef, navSize] = useElementSize();
     const [footRef, footSize] = useElementSize();
 
     const dispatch = useAppDispatch();
+
+    const router = useRouter();
+
     useEffect(() => {
-        const token = JSON.parse(localStorage.getItem('token') as string);
-        if (!token) return;
+        const token = getToken();
+
+        // if no token, redirect to login page
+        if (!token) {
+            setChecking(false);
+            return;
+        }
 
         dispatch(authUser(token));
-    }, []);
+
+        if (guard) {
+            if (!token) router.push('/signin');
+        }
+
+        setChecking(false);
+    }, [guard]);
 
     return (
         <>
@@ -37,7 +57,13 @@ export default function Layout({ children, title }: Props) {
                     }px)`,
                 }}
             >
-                <div className="container mx-auto ">{children}</div>
+                {checking ? (
+                    <div className="flex justify-center items-center">
+                        <Loader />
+                    </div>
+                ) : (
+                    <div className="container mx-auto ">{children}</div>
+                )}
             </main>
             <Footer footRef={footRef} />
         </>

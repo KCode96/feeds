@@ -16,7 +16,7 @@ services:
             JWT_SECRET: my_secret
             PORT: 3001
         volumes:
-            - ./services/auth/:/app/data
+            - ./services/auth/:/app
     article-service:
         build: './services/articles'
         ports:

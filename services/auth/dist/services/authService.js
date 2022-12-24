@@ -9,27 +9,31 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.forgotPassword = exports.loginUser = exports.registerUser = void 0;
+exports.forgotPassword = exports.login = exports.register = void 0;
 const models_1 = require("../models");
-const registerUser = ({ username, email, password }) => __awaiter(void 0, void 0, void 0, function* () {
+const register = ({ username, email, password }) => __awaiter(void 0, void 0, void 0, function* () {
     const user = yield models_1.User.findOne({ email }).select('-password');
     if (user)
         throw new Error(`${email} already registered`);
-    const newUser = yield yield models_1.User.create({ username, email, password });
+    const newUser = yield yield models_1.User.create({
+        username,
+        email,
+        password,
+    });
+    delete newUser.password;
     return newUser;
 });
-exports.registerUser = registerUser;
-const loginUser = ({ email, password }) => __awaiter(void 0, void 0, void 0, function* () {
+exports.register = register;
+const login = ({ email, password }) => __awaiter(void 0, void 0, void 0, function* () {
     const user = yield models_1.User.findOne({ email });
     if (!user)
         throw new Error(`${email} is not registered yet`);
     const isMatch = yield user.matchPassword(password);
-    console.log('Mach', isMatch);
     if (!isMatch)
         throw new Error(`Invalid credentials`);
     const token = user.getSignedJwtToken(user.id);
     return token;
 });
-exports.loginUser = loginUser;
+exports.login = login;
 const forgotPassword = (email) => { };
 exports.forgotPassword = forgotPassword;

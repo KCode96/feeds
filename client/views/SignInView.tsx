@@ -1,18 +1,26 @@
-import React, { FormEvent, useState } from 'react';
+import React, { FormEvent, useEffect, useState } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/router';
 
-import { Input, Button } from '../components/Form';
-import { useAppDispatch } from '../store/hooks';
-import { loginUser } from '../features/authSlice';
-import { LoginUser } from '../types';
+import { Input, Button } from 'components/Form';
+import { useAppDispatch, useAuth } from 'store/hooks';
+import { loginUser } from 'features/authSlice';
+import { Login } from 'types';
 
 export default function SignInView() {
-    const [{ email, password }, setFormData] = useState<LoginUser>({
+    const [{ email, password }, setFormData] = useState<Login>({
         email: 'kiwi@gmail.com',
         password: 'kiwi123',
     });
 
+    const { isLoading, isAuthenticated } = useAuth();
     const dispatch = useAppDispatch();
+    const router = useRouter();
+
+    useEffect(() => {
+        if (!isAuthenticated) return;
+        router.push('/');
+    }, [isAuthenticated]);
 
     const handleChange = (e: FormEvent) => {
         console.log(e);
@@ -64,7 +72,7 @@ export default function SignInView() {
                     type="submit"
                     title="Sign in"
                     onClick={handleSubmit}
-                    isLoading={false}
+                    isLoading={isLoading}
                 />
             </form>
         </div>

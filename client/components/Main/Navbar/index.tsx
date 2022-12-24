@@ -30,16 +30,16 @@ export default function Navbar({ navRef }: Props) {
                 {isAuthenticated ? (
                     <AuthNav pathname={pathname} />
                 ) : (
-                    <div className="flex items-center text-lg">
+                    <div className="flex items-center ">
                         {links.map(({ id, title, target }) => (
                             <Link
                                 href={`${target}`}
                                 key={id}
-                                className={`text-lg text-gray-600/50 mx-4 ${
+                                className={`text-sm  text-gray-600/50 mx-4 ${
                                     target === pathname
                                         ? 'text-black hover:text-black'
                                         : 'hover:text-gray-500'
-                                }`}
+                                } md:text-base`}
                             >
                                 {title}
                             </Link>

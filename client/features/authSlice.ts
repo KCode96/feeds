@@ -1,8 +1,8 @@
-import jwt_decode, { JwtPayload } from 'jwt-decode';
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 
-import { authClient } from '../api/client';
-import { User } from '../types';
+import { authClient } from 'api/client';
+import { InitialAuthState, User, Error } from 'types';
+import { decodeToken, removeToken, storeToken } from 'utilities';
 
 export const registerUser = createAsyncThunk(
     '/auth/register',
@@ -12,10 +12,9 @@ export const registerUser = createAsyncThunk(
     ) => {
         try {
             const res = await authClient.register(body);
-            console.log(res.data);
             return res.data;
-        } catch (err) {
-            return rejectWithValue(err);
+        } catch (err: any) {
+            return rejectWithValue(err.message);
         }
     }
 );
@@ -27,10 +26,13 @@ export const loginUser = createAsyncThunk(
             const res = await authClient.login(body);
 
             const token = res.data.token;
-            localStorage.setItem(`token`, JSON.stringify(token));
-            const decoded = jwt_decode<any>(token);
 
-            return decoded.user;
+            // store token in local storage
+            storeToken(token);
+
+            const user = decodeToken(token);
+
+            return user;
         } catch (err: any) {
             return rejectWithValue(err.message);
         }
@@ -40,27 +42,21 @@ export const loginUser = createAsyncThunk(
 export const authUser = createAsyncThunk(
     'auth/authUser',
     async (token: string) => {
-        const decoded = jwt_decode<any>(token);
-        return decoded.user;
+        const user = decodeToken(token);
+        return user;
     }
 );
 
-export const logoutUser = createAsyncThunk('/auth/logout', async () => {
-    localStorage.removeItem(`token`);
-});
+export const logoutUser = createAsyncThunk('/auth/logout', async () =>
+    removeToken()
+);
+
 export const forgotPassword = createAsyncThunk(
     '/auth/forgotPassword',
     async () => {}
 );
 
-export interface AuthState {
-    isAuthenticated: boolean;
-    isLoading: boolean;
-    user: null | User;
-    error: null | string;
-}
-
-const initialState: AuthState = {
+const initialState: InitialAuthState = {
     isAuthenticated: false,
     isLoading: false,
     error: null,
@@ -94,14 +90,21 @@ export const authSlice = createSlice({
         builder.addCase(authUser.fulfilled, (state, action) => {
             state.isAuthenticated = true;
             state.isLoading = false;
+            state.error = null;
             state.user = action.payload as User;
         });
         // Register
         builder.addCase(registerUser.pending, (state, action) => {
             state.isLoading = true;
         });
-        builder.addCase(registerUser.fulfilled, (state, action) => {});
-        builder.addCase(registerUser.rejected, (state, action) => {});
+        builder.addCase(registerUser.fulfilled, (state, action) => {
+            state.isLoading = false;
+            state.error = null;
+        });
+        builder.addCase(registerUser.rejected, (state, action) => {
+            state.isLoading = false;
+            state.error = action.payload as string;
+        });
         // Logout
         builder.addCase(logoutUser.fulfilled, (state, action) => {
             state.isAuthenticated = false;
