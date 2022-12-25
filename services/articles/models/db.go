@@ -1,6 +1,9 @@
 package models
 
 import (
+	"encoding/json"
+	"fmt"
+	"io/ioutil"
 	"os"
 
 	"gorm.io/driver/postgres"
@@ -21,5 +24,36 @@ func ConnectDB() {
 	db.AutoMigrate(&Tag{})
 	db.AutoMigrate(&Article{})
 
+	// Seed the database
+	// if err := Seed(db); err != nil {
+	// 	log.Fatal(err)
+	// }
+
+	fmt.Println("Seed data successfully added to the database.")
+
 	DB = db
+}
+
+func Seed(db *gorm.DB) error {
+
+	dir, _ := os.Getwd()
+
+	data, err := ioutil.ReadFile(dir + "/data/articleSeed.json")
+	if err != nil {
+		return err
+	}
+
+	var articles []Article
+
+	if err := json.Unmarshal(data, &articles); err != nil {
+		return err
+	}
+
+	for _, article := range articles {
+		if err := db.Create(&article).Error; err != nil {
+			return nil
+		}
+	}
+
+	return nil
 }

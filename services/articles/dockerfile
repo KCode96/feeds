@@ -2,13 +2,15 @@ FROM golang:alpine3.17
 
 ENV DB_URL="host=db-postgresql-syd1-96283-do-user-12994114-0.b.db.ondigitalocean.com user=doadmin password=AVNS_EU1LYCSS7HpHQRwitkM dbname=defaultdb port=25060 sslmode=require"
 
-WORKDIR /go/src/app
-
+WORKDIR /app
 COPY go.mod go.sum ./
 RUN go mod download
 
+RUN go install github.com/cosmtrek/air@latest
+
+
 COPY . .
 
-EXPOSE 3000
+EXPOSE 3001
 
-CMD ["go", "run", "main.go"]
+ENTRYPOINT [ "air" ]

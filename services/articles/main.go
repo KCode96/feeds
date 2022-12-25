@@ -21,6 +21,7 @@ func main() {
 	r.Use(gin.Recovery())
 	r.Use(cors.Default())
 
+
 	// Connect to the database
 	models.ConnectDB()
 
