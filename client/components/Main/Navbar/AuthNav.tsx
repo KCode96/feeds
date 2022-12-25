@@ -14,14 +14,14 @@ export default function AuthNav({ pathname }: Props) {
     const { user } = useAuth();
 
     return (
-        <ul className="flex items-center text-sm space-x-5 sm:text-base">
+        <ul className="flex items-center text-sm space-x-3 sm:text-base sm:space-x-5">
             <Link href="/">
                 <li
-                    className={`text-gray-600/50  ${
+                    className={`text-gray-600/50 hidden ${
                         pathname == '/'
                             ? 'text-black hover:text-black'
                             : 'hover:text-gray-500'
-                    } `}
+                    } sm:block`}
                 >
                     Home
                 </li>
