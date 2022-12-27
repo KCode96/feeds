@@ -14,7 +14,10 @@ export default function PopularTags() {
             <h4 className="mb-2">Popular Tags 🔥</h4>
             <div className="flex flex-wrap">
                 {tagList.map((t, idx) => (
-                    <div className="mb-2 mr-1 inline cursor-pointer text-sm bg-gray-700/70 rounded-full px-2 py-1 text-white hover:bg-gray-700">
+                    <div
+                        key={idx}
+                        className="mb-2 mr-1 inline cursor-pointer text-sm bg-gray-700/70 rounded-full px-2 py-1 text-white hover:bg-gray-700"
+                    >
                         {t}
                     </div>
                 ))}

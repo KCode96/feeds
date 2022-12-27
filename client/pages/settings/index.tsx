@@ -7,6 +7,7 @@ import { useAppDispatch, useAuth } from 'store/hooks';
 import { updateUser } from 'features/userSlice';
 
 export default function index() {
+    const [isLoading, setIsLoading] = useState<boolean>(false);
     const [formData, setFormData] = useState({
         username: '',
         image: '',
@@ -40,7 +41,7 @@ export default function index() {
 
     return (
         <Layout title="Settings" guard>
-            <div className="max-w-[430px] mx-auto">
+            <div className="container mx-auto w-full py-6 max-w-[800px] ">
                 <form className="border-b border-gray-500/30 pb-6">
                     <h1 className="mb-4 text-2xl text-center">Your Settings</h1>
                     <Input
@@ -82,15 +83,14 @@ export default function index() {
                     />
                     <Button
                         title="Update settings"
-                        isLoading={false}
-                        className="bg-green-500 hover:bg-green-600"
+                        isSubmitting={false}
                         onClick={handleSubmit}
                     />
                 </form>
                 <Button
                     title="Logout"
-                    className="mt-4 bg-red-500 hover:bg-red-600"
-                    isLoading={false}
+                    className="mt-4"
+                    isSubmitting={false}
                     onClick={() => dispatch(logoutUser())}
                 />
             </div>

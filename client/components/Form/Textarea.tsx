@@ -1,12 +1,4 @@
-import React from 'react';
-
-type Props = {
-    placeholder: string;
-    className?: string;
-    value?: string;
-    onChange: any;
-    name?: string;
-};
+import React, { TextareaHTMLAttributes } from 'react';
 
 export default function Textarea({
     placeholder,
@@ -14,14 +6,15 @@ export default function Textarea({
     value,
     onChange,
     name,
-}: Props) {
+    rows = 5
+}: TextareaHTMLAttributes<any>) {
     return (
         <textarea
             value={value}
             className={`${className} textarea-primary`}
             minLength={150}
             placeholder={placeholder}
-            rows={5}
+            rows={rows}
             onChange={onChange}
             name={name}
         />

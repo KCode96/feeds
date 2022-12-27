@@ -17,6 +17,8 @@ func AuthMiddleware() gin.HandlerFunc {
 			return
 		}
 
+		
+
 		// token := strings.Split(token, " ")[0]
 
 		// Validate the token

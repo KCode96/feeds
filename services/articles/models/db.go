@@ -21,8 +21,11 @@ func ConnectDB() {
 		panic(err.Error())
 	}
 
-	db.AutoMigrate(&Tag{})
+	// db.Migrator().DropTable(&Tag{})
+	// db.Migrator().DropTable(&Article{})
+
 	db.AutoMigrate(&Article{})
+	db.AutoMigrate(&Tag{})
 
 	// Seed the database
 	// if err := Seed(db); err != nil {

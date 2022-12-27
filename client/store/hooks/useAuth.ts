@@ -1,5 +1,5 @@
 import { useAppSelector } from '.';
-import { InitialAuthState } from 'features/authSlice';
+import { InitialAuthState } from 'types';
 
 const useAuth = () =>
     useAppSelector<InitialAuthState>(state => state.auth as InitialAuthState);

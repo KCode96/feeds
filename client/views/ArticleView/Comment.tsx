@@ -3,8 +3,8 @@ import { MdDeleteForever } from 'react-icons/md';
 
 export default function Comment() {
     return (
-        <div className="flex flex-col w-full  max-w-[700px]">
-            <div className="p-4 text-sm caret-blue-500 border-t border-l border-r rounded-tl rounded-tr text-black/90">
+        <div className="flex flex-col ">
+            <div className="p-4 text-sm border-t border-l border-r rounded-tl rounded-tr text-black/90">
                 Hello comment_!
             </div>
             <div className="py-2 px-4 flex items-center justify-between bg-gray-200/40 border rounded-bl rounded-br">

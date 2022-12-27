@@ -13,10 +13,10 @@ export type User = {
     id: string;
     username: string;
     email: string;
-    password: string;
+    password?: string;
     role: 'user' | 'admin';
-    createdAt: Date;
-    updatedAt: Date;
+    createdAt?: Date;
+    updatedAt?: Date;
     image?: string | undefined;
     bio?: string | undefined;
 };

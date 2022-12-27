@@ -12,7 +12,6 @@ export default function (app: Express) {
         '/api/register',
         validateRequest(authSchema.registerUser),
         async (req: Request, res: Response) => {
-            console.log(req.body);
             const user = await authService.register(req.body);
 
             res.status(201).json({ success: true, data: user, message: '' });

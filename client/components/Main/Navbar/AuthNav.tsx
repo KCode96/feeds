@@ -65,10 +65,10 @@ export default function AuthNav({ pathname }: Props) {
                 <li className="flex items-center hover:text-red-500">
                     <Image
                         src="/assets/images/smiley-cyrus.jpeg"
-                        width={30}
-                        height={30}
+                        width={25}
+                        height={25}
                         alt="profile"
-                        className="rounded-full"
+                        className="rounded-full sm:w-[30px] sm:h-[30px]"
                     />
                     <span
                         className={`ml-1 text-gray-600/50  ${

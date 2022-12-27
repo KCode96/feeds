@@ -41,8 +41,6 @@ const UserSchema = new mongoose_1.default.Schema({
                     role: this.role,
                     image: this.image,
                     bio: this.bio,
-                    createdAt: this.createdAt,
-                    updatedAt: this.updatedAt,
                 },
             }, config_1.JWT_SECRET, {
                 expiresIn: '30d',

@@ -1,4 +1,2 @@
-import * as authSchema from './authSchema';
-import * as userSchema from './userSchema';
-
-export { authSchema, userSchema };
+export * as authSchema from './authSchema';
+export * as userSchema from './userSchema';

@@ -1,17 +1,14 @@
-import React, {
-    ButtonHTMLAttributes,
-    HTMLAttributes,
-    InputHTMLAttributes,
-} from 'react';
+import React, { ButtonHTMLAttributes } from 'react';
+import { RotatingLines } from 'react-loader-spinner';
 
 interface Props extends ButtonHTMLAttributes<any> {
     title: string;
     className?: string;
-    isLoading: boolean;
+    isSubmitting: boolean;
 }
 
 export default function SubmitButton({
-    isLoading,
+    isSubmitting,
     title,
     className,
     type,
@@ -21,11 +18,22 @@ export default function SubmitButton({
         <button
             type={type || 'button'}
             className={`${className} ${
-                isLoading ? 'bg-blue-400 cursor-not-allowed' : 'bg-blue-500'
-            } btn-primary`}
+                isSubmitting ? 'bg-blue-400 cursor-not-allowed' : 'bg-blue-500'
+            } btn-primary transition  flex justify-center items-center min-w-[144px] min-h-[45px]`}
             {...props}
+            disabled={isSubmitting}
         >
-            {isLoading ? 'Loading...' : title}
+            {isSubmitting ? (
+                <RotatingLines
+                    strokeColor="grey"
+                    strokeWidth="3"
+                    animationDuration="0.75"
+                    width="26"
+                    visible={true}
+                />
+            ) : (
+                title
+            )}
         </button>
     );
 }

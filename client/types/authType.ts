@@ -6,7 +6,7 @@ export interface InitialAuthState {
 }
 
 export type User = {
-    id: number;
+    id: string;
     username: string;
     email: string;
     role: 'user' | 'admin';

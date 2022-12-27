@@ -24,7 +24,5 @@ var __importStar = (this && this.__importStar) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.userSchema = exports.authSchema = void 0;
-const authSchema = __importStar(require("./authSchema"));
-exports.authSchema = authSchema;
-const userSchema = __importStar(require("./userSchema"));
-exports.userSchema = userSchema;
+exports.authSchema = __importStar(require("./authSchema"));
+exports.userSchema = __importStar(require("./userSchema"));

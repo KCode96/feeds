@@ -50,7 +50,7 @@ export default function Layout({ children, title, guard }: Props) {
             </Head>
             <Navbar navRef={navRef} />
             <main
-                className=" bg-gray-50"
+                className=" "
                 style={{
                     minHeight: `calc(100vh - ${
                         navSize.height + footSize.height

@@ -14,6 +14,7 @@
         "@types/react": "18.0.25",
         "@types/react-dom": "18.0.9",
         "axios": "^1.2.0",
+        "dayjs": "^1.11.7",
         "jwt-decode": "^3.1.2",
         "next": "13.0.5",
         "nextjs-cors": "^2.1.2",

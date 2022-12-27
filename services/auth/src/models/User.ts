@@ -30,8 +30,6 @@ const UserSchema = new mongoose.Schema(
                             role: this.role,
                             image: this.image,
                             bio: this.bio,
-                            createdAt: this.createdAt,
-                            updatedAt: this.updatedAt,
                         },
                     },
                     JWT_SECRET as string,

@@ -6,7 +6,7 @@ export default function (
     res: Response,
     next: NextFunction
 ) {
-    const statusCode = req.statusCode || 500;
+    const statusCode = res.statusCode || 500;
     const message = err.message || 'Internal Server Error!';
 
     res.status(statusCode).json({ success: false, message, data: null });

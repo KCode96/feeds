@@ -80,7 +80,7 @@ export default function SignInView() {
                     type="submit"
                     title="Sign in"
                     onClick={handleSubmit}
-                    isLoading={isLoading}
+                    isSubmitting={isLoading}
                 />
             </form>
         </div>

@@ -1,8 +1,8 @@
 import { Request, Response, Express } from 'express';
-import cors from 'cors';
 
 import { userService } from '../services';
 import { validateRequest } from './middlewares';
+
 import { userSchema } from '../schemas';
 
 export default function (app: Express) {

@@ -17,6 +17,7 @@ require (
 	github.com/jackc/pgtype v1.12.0 // indirect
 	github.com/jackc/pgx/v4 v4.17.2 // indirect
 	github.com/joho/godotenv v1.4.0 // indirect
+	github.com/lib/pq v1.10.7 // indirect
 )
 
 require (
@@ -27,6 +28,7 @@ require (
 	github.com/go-playground/validator/v10 v10.11.1 // indirect
 	github.com/go-sql-driver/mysql v1.6.0 // indirect
 	github.com/goccy/go-json v0.10.0 // indirect
+	github.com/google/uuid v1.3.0
 	github.com/jinzhu/inflection v1.0.0 // indirect
 	github.com/jinzhu/now v1.1.5 // indirect
 	github.com/json-iterator/go v1.1.12 // indirect

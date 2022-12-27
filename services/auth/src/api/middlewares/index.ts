@@ -1,5 +1,7 @@
-import validateRequest from './validateRequest';
-import notFoundHandler from './notFoundHandler';
-import errorHandler from './errorHandler';
+import errorHandler from './error';
+import notFoundHandler from './notFound';
 
-export { errorHandler, notFoundHandler, validateRequest };
+export * from './validateRequest';
+export * from './auth';
+
+export { errorHandler, notFoundHandler };

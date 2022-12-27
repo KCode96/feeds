@@ -15,4 +15,7 @@ func AritcleRoute(r *gin.Engine) {
 	r.GET(endpoint+"/:id", controllers.GetArticle)
 	r.PUT(endpoint+"/:id", controllers.UpdateArticle)
 	r.DELETE(endpoint+"/:id", controllers.DeleteArticle)
+	r.GET(endpoint+"/:id/like", controllers.LikeArticle)
+
+	r.GET(endpoint+"/author/:id", controllers.GetArticlesByAuthorId)
 }

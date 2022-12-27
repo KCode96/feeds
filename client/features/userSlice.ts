@@ -15,6 +15,19 @@ export const updateUser = createAsyncThunk(
     }
 );
 
+export const getUserById = createAsyncThunk(
+    '/user/get',
+    async (id: string, { rejectWithValue }) => {
+        try {
+            const res = await userClient.get(id);
+            return res.data.data;
+        } catch (err: any) {
+            const error = err.response.data.message;
+            return rejectWithValue(error);
+        }
+    }
+);
+
 const initialState: InitialUserState = {
     isLoading: false,
     user: null,

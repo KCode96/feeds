@@ -2,7 +2,6 @@ package controllers
 
 import (
 	"feeds-articles/models"
-	"fmt"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -10,27 +9,19 @@ import (
 
 func CreateTag(c *gin.Context) {
 
-	var body struct {
-		Name string
+	var tag *models.Tag
+
+	if err := c.ShouldBindJSON(&tag); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"data": nil, "success": false, "message": err.Error()})
+		return
 	}
 
-	c.Bind(&body)
-
-	if body.Name == "" {
+	if tag.Name == "" {
 		c.JSON(http.StatusBadRequest, gin.H{"data": nil, "success": false, "message": "Name is empty"})
 		return
 	}
 
-	tag := &models.Tag{Name: body.Name}
-
-	result := models.DB.Create(&tag)
-
-	fmt.Println(result.Error)
-
-	if result.Error != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"data": nil, "success": false, "message": "Failed to create tag"})
-		return
-	}
+	models.DB.Create(&tag)
 
 	c.JSON(http.StatusCreated, gin.H{"success": true, "data": tag})
 }
@@ -66,7 +57,7 @@ func UpdateTag(c *gin.Context) {
 	}
 
 	// Update the tag properties
-	tag.Name = "New"
+	// tag.name = "New"
 
 	models.DB.Save(&tag)
 

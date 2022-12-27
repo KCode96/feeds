@@ -9,6 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.validateRequest = void 0;
 const validateRequest = (schema) => (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     yield schema.validate({
         params: req.params,
@@ -17,4 +18,4 @@ const validateRequest = (schema) => (req, res, next) => __awaiter(void 0, void 0
     });
     next();
 });
-exports.default = validateRequest;
+exports.validateRequest = validateRequest;
