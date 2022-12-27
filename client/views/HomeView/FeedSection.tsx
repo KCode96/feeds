@@ -9,7 +9,7 @@ import FeedSelect from './FeedSelect';
 export default function FeedSection() {
     const dispatch = useAppDispatch();
 
-    const { isLoading, articles } = useArticle();
+    const { isLoading, articles, isLiking } = useArticle();
 
     useEffect(() => {
         dispatch(getAllArticles());
@@ -25,7 +25,12 @@ export default function FeedSection() {
                     <div>
                         <div>
                             {articles.map((a, idx) => (
-                                <Feed key={idx} {...a} authorName={a.author!.username} />
+                                <Feed
+                                    key={idx}
+                                    {...a}
+                                    authorName={a.author!.username}
+                                    isLiking={isLiking}
+                                />
                             ))}
                         </div>
                         <FeedPagination />

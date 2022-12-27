@@ -5,7 +5,17 @@ const NEXT_AUTHURL = process.env.NEXT_PUBLIC_AUTHURL;
 const NEXT_ARTICLEURL = process.env.NEXT_PUBLIC_ARTICLEURL;
 
 const userClient = axios.create({ baseURL: NEXT_AUTHURL });
-const articleClient = axios.create({ baseURL: NEXT_ARTICLEURL });
+const articleClient = axios.create({
+    baseURL: NEXT_ARTICLEURL,
+});
+
+function getConfig(token: string) {
+    return {
+        headers: {
+            Authorization: `Bearer ${token}`,
+        },
+    };
+}
 
 export function getAllArticles() {
     return articleClient.get('');
@@ -23,6 +33,10 @@ export function createArticle(body: CreateArticle) {
     return articleClient.post('', body);
 }
 
-export function likeArticle(id: number) {
-    return articleClient.get(`${id}/like`);
+export function likeArticle(id: number, token: string) {
+    return articleClient.get(`${id}/like`, getConfig(token));
+}
+
+export function unlikeArticle(id: number, token: string) {
+    return articleClient.get(`${id}/unlike`, getConfig(token));
 }

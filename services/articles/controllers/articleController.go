@@ -27,9 +27,9 @@ func GetAllArticles(c *gin.Context) {
 		return
 	}
 
-	for i, a := range articles {
+	var response *Response
 
-		var response *Response
+	for i, a := range articles {
 
 		res, _ := http.Get("http://localhost:3001/api/users/" + a.AuthorId)
 
@@ -47,7 +47,7 @@ func GetArticle(c *gin.Context) {
 
 	id := c.Param("id")
 
-	var article *models.Article
+	var article models.Article
 
 	result := models.DB.Find(&article, id)
 
@@ -56,7 +56,7 @@ func GetArticle(c *gin.Context) {
 		return
 	}
 
-	var response *Response
+	var response Response
 
 	res, _ := http.Get("http://localhost:3001/api/users/63a70ba1e1257dc0e1915706")
 
@@ -71,14 +71,15 @@ func GetArticle(c *gin.Context) {
 
 func CreateArticle(c *gin.Context) {
 
-	var article *models.Article
+	var article models.Article
 
 	if err := c.ShouldBindJSON(&article); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"data": nil, "success": false, "message": err.Error()})
 		return
 	}
 
-	fmt.Println(article)
+	// Set empyt array
+	article.Likes = []string{}
 
 	result := models.DB.Create(&article)
 	if result.Error != nil {
@@ -124,6 +125,7 @@ func GetArticlesByAuthorId(c *gin.Context) {
 
 func LikeArticle(c *gin.Context) {
 	aid := c.Param("id")
+	uid := c.MustGet("id").(string)
 
 	var article *models.Article
 
@@ -134,11 +136,77 @@ func LikeArticle(c *gin.Context) {
 		return
 	}
 
+	var isLiked bool
+
+	// add the liker
+	for _, v := range article.Likes {
+		if v == uid {
+			isLiked = true
+			break
+		}
+	}
+
+	if isLiked {
+		c.AbortWithStatus(http.StatusBadRequest)
+		return
+	}
+
+	article.Likes = append(article.Likes, uid)
+
 	// increase the like
 	article.LikesCount++
 
 	models.DB.Save(&article)
 
-	c.JSON(http.StatusOK, gin.H{"success": true, "data": article, "message": ""})
+	fmt.Println(article)
 
+	c.JSON(http.StatusOK, gin.H{"success": true, "data": article, "message": ""})
+}
+
+func UnlikeArticle(c *gin.Context) {
+	aid := c.Param("id")
+	uid := c.MustGet("id").(string)
+
+	var article models.Article
+
+	result := models.DB.First(&article, aid)
+
+	if result.RowsAffected == 0 {
+		c.JSON(http.StatusNotFound, gin.H{"data": nil, "success": false, "message": "Unable to find tag with " + aid})
+		return
+	}
+
+	var isLiked bool
+	for _, v := range article.Likes {
+		if v == uid {
+			isLiked = true
+		} else {
+			isLiked = false
+		}
+	}
+
+	if !isLiked {
+		c.AbortWithStatus(400)
+		return
+	}
+
+	var likes []string
+	for _, v := range article.Likes {
+		if v != uid {
+			likes = append(likes, v)
+		}
+	}
+
+	if likes == nil {
+		article.Likes = []string{}
+	} else {
+		article.Likes = likes
+	}
+
+	// substract the like
+	article.LikesCount--
+
+	models.DB.Save(&article)
+
+	c.JSON(http.StatusOK, gin.H{"success": true, "data": article, "message": ""})
 }

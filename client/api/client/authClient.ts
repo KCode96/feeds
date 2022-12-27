@@ -3,7 +3,8 @@ import { Login, Register } from 'types';
 
 const NEXT_AUTHURL = process.env.NEXT_PUBLIC_AUTHURL;
 
-const client = axios.create({ baseURL: NEXT_AUTHURL });
+const client = axios.create({ baseURL: NEXT_AUTHURL});
+
 
 export async function register(body: Register) {
     return await client.post('/register', body);

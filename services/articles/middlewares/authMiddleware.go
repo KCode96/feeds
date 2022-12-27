@@ -3,33 +3,35 @@ package middlewares
 import (
 	"feeds-articles/helpers"
 	"net/http"
+	"strings"
 
 	"github.com/gin-gonic/gin"
 )
 
-func AuthMiddleware() gin.HandlerFunc {
+func Auth() gin.HandlerFunc {
 
 	return func(c *gin.Context) {
-		token := c.GetHeader("Authorization")
 
-		if token == "" {
+		// get the header
+		header := c.GetHeader("Authorization")
+
+		if header == "" {
 			c.AbortWithStatus(http.StatusUnauthorized)
 			return
 		}
 
-		
+		token := strings.Split(header, " ")[1]
 
-		// token := strings.Split(token, " ")[0]
+		id := helpers.ValidateToken(token)
 
 		// Validate the token
-		valid, err := helpers.ValidateToken("")
-		if err != nil || !valid {
+		if id == "" {
 			c.AbortWithStatus(http.StatusUnauthorized)
 			return
 		}
 
 		// Token is valid, call the next handler
+		c.Set("id", id)
 		c.Next()
-
 	}
 }

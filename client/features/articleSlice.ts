@@ -2,6 +2,7 @@ import { InitialArticleState } from 'types/articleType';
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { articleClient } from 'api/client';
 import { Article } from 'types/articleType';
+import { decodeToken, getToken } from 'utilities/token';
 
 export const getAllArticles = createAsyncThunk(
     'article/getAll',
@@ -31,9 +32,12 @@ export const getArticlesByUserId = createAsyncThunk(
 
 export const likeArticle = createAsyncThunk(
     'article/likeArticle',
-    async (id: number, { rejectWithValue }) => {
+    async (
+        { id, token }: { id: number; token: string },
+        { rejectWithValue }
+    ) => {
         try {
-            const res = await articleClient.likeArticle(id);
+            const res = await articleClient.likeArticle(id, token);
             return res.data.data;
         } catch (err: any) {
             const error = err.response.data.message;
@@ -44,9 +48,12 @@ export const likeArticle = createAsyncThunk(
 
 export const unlikeArticle = createAsyncThunk(
     'article/unlikeArticle',
-    async (id: number, { rejectWithValue }) => {
+    async (
+        { id, token }: { id: number; token: string },
+        { rejectWithValue }
+    ) => {
         try {
-            const res = await articleClient.likeArticle(id);
+            const res = await articleClient.unlikeArticle(id, token);
             return res.data.data;
         } catch (err: any) {
             const error = err.response.data.message;
@@ -79,8 +86,20 @@ export const articleSlice = createSlice({
             state.error = null;
         });
         builder.addCase(getAllArticles.fulfilled, (state, action) => {
+            const user = decodeToken(getToken());
+            const id = user.id;
+
+            const formattedPayload = action.payload.map((article: Article) => {
+                if (article.likes.findIndex(i => i == id) == 0) {
+                    return { ...article, isLiked: true };
+                }
+
+                return { ...article, isLiked: false };
+            });
+
+            state.articles = formattedPayload;
+
             state.isLoading = false;
-            state.articles = action.payload;
         });
         builder.addCase(getAllArticles.rejected, (state, action) => {
             state.isLoading = false;
@@ -104,13 +123,27 @@ export const articleSlice = createSlice({
             state.isLiking = true;
         });
         builder.addCase(likeArticle.fulfilled, (state, action) => {
-            const likedArticle = action.payload.id;
+            const likedArticleId = action.payload.id;
 
             // Update like on states
-            state.articles = UpdateLikeOnState(state.articles, likedArticle);
+            state.articles = UpdateLikeOnState(state.articles, likedArticleId);
             state.myArticles = UpdateLikeOnState(
                 state.myArticles,
-                likedArticle
+                likedArticleId
+            );
+
+            state.isLiking = false;
+        });
+        // Unlike article
+        builder.addCase(unlikeArticle.pending, (state, action) => {
+            state.isLiking = true;
+        });
+        builder.addCase(unlikeArticle.fulfilled, (state, action) => {
+            const unlikedArticleId = action.payload.id;
+
+            state.articles = UpdateUnlikeOnState(
+                state.articles,
+                unlikedArticleId
             );
 
             state.isLiking = false;
@@ -118,12 +151,26 @@ export const articleSlice = createSlice({
     },
 });
 
-function UpdateLikeOnState(articles: Article[], likedArticle: number) {
+function UpdateLikeOnState(articles: Article[], likedArticleId: number) {
     return articles.map(article => {
-        if (article.id == likedArticle) {
+        if (article.id == likedArticleId) {
             return {
                 ...article,
                 likesCount: article.likesCount + 1,
+                isLiked: true,
+            };
+        }
+        return article;
+    });
+}
+
+function UpdateUnlikeOnState(articles: Article[], unlikedArticleId: number) {
+    return articles.map(article => {
+        if (article.id == unlikedArticleId) {
+            return {
+                ...article,
+                likesCount: article.likesCount - 1,
+                isLiked: false,
             };
         }
         return article;

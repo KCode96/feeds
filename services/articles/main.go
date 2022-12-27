@@ -4,10 +4,10 @@ import (
 	"feeds-articles/api"
 	"feeds-articles/initializers"
 	"feeds-articles/models"
+
 	"os"
 
 	"github.com/gin-contrib/cors"
-
 	"github.com/gin-gonic/gin"
 )
 
@@ -16,15 +16,20 @@ func main() {
 
 	initializers.LoadEnvs()
 
-	// Middlewares
+	// middlewares
 	r.Use(gin.Logger())
 	r.Use(gin.Recovery())
-	r.Use(cors.Default())
 
-	// Connect to the database
+	config := cors.DefaultConfig()
+	config.AllowAllOrigins = true
+	config.AllowCredentials = true
+	config.AddAllowHeaders("authorization")
+	r.Use(cors.New(config))
+
+	// connect to the database
 	models.ConnectDB()
 
-	// Routes
+	// routes
 	api.TagRoute(r)
 	api.AritcleRoute(r)
 

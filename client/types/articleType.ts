@@ -6,10 +6,11 @@ export type Article = {
     body: string;
     description: string;
     slug: string;
-    likes: number;
+    likes: string[];
     author: null | User;
     authorId: string;
     likesCount: number;
+    isLiked?: boolean;
     createdAt: Date;
     updatedAt: Date;
 };

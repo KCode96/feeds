@@ -28,7 +28,7 @@ export default function EditorPage() {
 
             setFormData({ title: '', description: '', body: '' });
         } catch (err: any) {
-            console.error(err.data.data);
+            console.error(err.message);
         }
 
         setIsLoading(false);
