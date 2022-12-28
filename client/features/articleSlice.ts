@@ -4,11 +4,24 @@ import { articleClient } from 'api/client';
 import { Article } from 'types/articleType';
 import { decodeToken, getToken } from 'utilities/token';
 
-export const getAllArticles = createAsyncThunk(
-    'article/getAll',
+export const getGlobalArticles = createAsyncThunk(
+    'article/getGlobalArticles',
     async (_, { rejectWithValue }) => {
         try {
-            const res = await articleClient.getAllArticles();
+            const res = await articleClient.getGlobalArticles();
+            return res.data.data;
+        } catch (err: any) {
+            const error = err.response.data.message;
+            return rejectWithValue(error);
+        }
+    }
+);
+
+export const getLocalArticles = createAsyncThunk(
+    'article/getLocalArticles',
+    async (token: string, { rejectWithValue }) => {
+        try {
+            const res = await articleClient.getLocalArticles(token);
             return res.data.data;
         } catch (err: any) {
             const error = err.response.data.message;
@@ -80,7 +93,7 @@ const initialState: InitialArticleState = {
     isLiking: false,
     articles: [],
     myArticles: [],
-    favouriteArticles: [],
+    myFavouriteArticles: [],
     authorArticles: [],
     authorFavouriteArticles: [],
     error: null,
@@ -95,12 +108,12 @@ export const articleSlice = createSlice({
         },
     },
     extraReducers: builder => {
-        // Get all articles
-        builder.addCase(getAllArticles.pending, (state, action) => {
+        // Get Global articles
+        builder.addCase(getGlobalArticles.pending, (state, action) => {
             state.isLoading = true;
             state.error = null;
         });
-        builder.addCase(getAllArticles.fulfilled, (state, action) => {
+        builder.addCase(getGlobalArticles.fulfilled, (state, action) => {
             const token = getToken();
 
             // If not logged in
@@ -130,10 +143,35 @@ export const articleSlice = createSlice({
 
             state.isLoading = false;
         });
-        builder.addCase(getAllArticles.rejected, (state, action) => {
+        builder.addCase(getGlobalArticles.rejected, (state, action) => {
             state.isLoading = false;
             state.error = action.payload as string;
         });
+        // Get Local articles
+        builder.addCase(getLocalArticles.pending, (state, action) => {
+            state.isLoading = true;
+            state.error = null;
+        });
+        builder.addCase(getLocalArticles.fulfilled, (state, action) => {
+            const token = getToken();
+            const userId = decodeToken(token).id;
+
+            const formattedPayload = action.payload.map((article: Article) => {
+                if (article.likes.find(i => i == userId)) {
+                    return { ...article, isLiked: true };
+                }
+
+                return { ...article, isLiked: false };
+            });
+
+            state.articles = formattedPayload;
+            state.isLoading = false;
+        });
+        builder.addCase(getLocalArticles.rejected, (state, action) => {
+            state.isLoading = false;
+            state.error = action.payload as string;
+        });
+
         // Get all articles by user id
         builder.addCase(getArticlesByUserId.pending, (state, action) => {
             state.isLoading = true;

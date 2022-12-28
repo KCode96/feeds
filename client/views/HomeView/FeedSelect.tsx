@@ -1,10 +1,27 @@
-import { useAuth } from '@/store/hooks';
-import React, { useState } from 'react';
+import { getGlobalArticles, getLocalArticles } from 'features/articleSlice';
+import { useAppDispatch, useArticle, useAuth } from 'store/hooks';
+import React, { useEffect, useState } from 'react';
+import { getToken } from 'utilities/token';
 
 export default function FeedSelect() {
     const [selected, setSelected] = useState<'default' | 'global'>('global');
 
+    const isGlobalFeeds = selected === 'global';
+
     const { isAuthenticated } = useAuth();
+    const dispatch = useAppDispatch();
+
+    const token = getToken();
+
+    useEffect(() => {
+        if (isGlobalFeeds) {
+            dispatch(getGlobalArticles());
+            return;
+        }
+
+        console.log('Local');
+        dispatch(getLocalArticles(token));
+    }, [selected]);
 
     return (
         <div className="border-b pb-[5px] ">

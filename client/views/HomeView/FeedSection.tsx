@@ -1,19 +1,10 @@
-import { getAllArticles, reset } from '@/features/articleSlice';
-import { useAppDispatch } from '@/store/hooks';
-import useArticle from '@/store/hooks/useArticle';
-import React, { useEffect } from 'react';
+import useArticle from 'store/hooks/useArticle';
 import Feed from 'components/Feed';
 import FeedPagination from './FeedPagination';
 import FeedSelect from './FeedSelect';
 
 export default function FeedSection() {
-    const dispatch = useAppDispatch();
-
     const { isLoading, articles, isLiking } = useArticle();
-
-    useEffect(() => {
-        dispatch(getAllArticles());
-    }, []);
 
     return (
         <div className="sm:mr-6 sm:order-1 sm:flex-1">
@@ -24,16 +15,24 @@ export default function FeedSection() {
                 ) : (
                     <div>
                         <div>
-                            {articles.map((a, idx) => (
-                                <Feed
-                                    key={idx}
-                                    {...a}
-                                    authorName={a.author!.username}
-                                    isLiking={isLiking}
-                                />
-                            ))}
+                            {articles.length == 0 ? (
+                                <div className="mt-2">
+                                    No articles are here... yet.
+                                </div>
+                            ) : (
+                                <>
+                                    {articles.map((a, idx) => (
+                                        <Feed
+                                            key={idx}
+                                            {...a}
+                                            authorName={a.author!.username}
+                                            isLiking={isLiking}
+                                        />
+                                    ))}
+                                    <FeedPagination />
+                                </>
+                            )}
                         </div>
-                        <FeedPagination />
                     </div>
                 )}
             </div>

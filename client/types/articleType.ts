@@ -21,7 +21,7 @@ export type InitialArticleState = {
     articles: [] | Article[];
     error: null | string;
     myArticles: [] | Article[];
-    favouriteArticles: [] | Article[];
+    myFavouriteArticles: [] | Article[];
     authorArticles: [] | Article[];
     authorFavouriteArticles: [] | Article[];
 };

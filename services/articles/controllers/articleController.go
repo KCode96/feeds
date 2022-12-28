@@ -22,8 +22,9 @@ func GetAllArticles(c *gin.Context) {
 
 	result := models.DB.Find(&articles)
 
-	if result.Error != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"data": nil, "success": false, "message": "Unable to get tags!"})
+	// if no articles, return an empty list
+	if result.RowsAffected == 0 {
+		c.JSON(http.StatusBadRequest, gin.H{"data": []models.Article{}, "success": false, "message": ""})
 		return
 	}
 
@@ -38,10 +39,53 @@ func GetAllArticles(c *gin.Context) {
 		json.Unmarshal(body, &response)
 
 		articles[i].Author = response.Data
-
 	}
 
 	c.JSON(http.StatusOK, gin.H{"success": true, "data": articles, "message": ""})
+}
+
+func GetLocalArticles(c *gin.Context) {
+	var articles []*models.Article
+
+	uid := c.MustGet("id").(string)
+
+	// if no articles, return an empty list
+	result := models.DB.Find(&articles)
+	if result.RowsAffected == 0 {
+		c.JSON(http.StatusBadRequest, gin.H{"data": []models.Article{}, "success": false, "message": ""})
+		return
+	}
+
+	var response *Response
+
+	for i, a := range articles {
+
+		res, _ := http.Get("http://localhost:3001/api/users/" + a.AuthorId)
+
+		body, _ := ioutil.ReadAll(res.Body)
+
+		json.Unmarshal(body, &response)
+
+		articles[i].Author = response.Data
+	}
+
+	var filteredArticles []*models.Article
+
+	for _, a := range articles {
+		for _, f := range a.Author.Followers {
+			fmt.Println(f, uid)
+			if f == uid {
+				filteredArticles = append(filteredArticles, a)
+			}
+		}
+	}
+
+	if len(filteredArticles) == 0 {
+		c.JSON(http.StatusOK, gin.H{"success": true, "data": []models.Article{}, "message": ""})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"success": true, "data": filteredArticles, "message": ""})
 }
 
 func GetArticle(c *gin.Context) {

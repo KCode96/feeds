@@ -1,13 +1,9 @@
 import React, { useEffect } from 'react';
 import Image from 'next/image';
 import { SlUserFollowing, SlUserUnfollow } from 'react-icons/sl';
-import { useAppDispatch, useAuth } from '@/store/hooks';
+import { useAppDispatch, useAuth } from 'store/hooks';
 import useUser from 'store/hooks/useUser';
-import {
-    followUser,
-    getAuthorDetails,
-    unfollowUser,
-} from '@/features/userSlice';
+import { followUser, getAuthorDetails, unfollowUser } from 'features/userSlice';
 import { useRouter } from 'next/router';
 import { getToken } from 'utilities/token';
 
@@ -26,8 +22,6 @@ export default function AuthorHeader() {
     useEffect(() => {
         dispatch(getAuthorDetails(id));
     }, [id]);
-
-    console.log(author?.isFollowed);
 
     const handleFollow = () => {
         // If not authorized, redirect to sign in page
@@ -62,7 +56,8 @@ export default function AuthorHeader() {
             >
                 {author?.isFollowed ? (
                     <>
-                        <SlUserUnfollow /> <span className="ml-1">Unfollow</span>
+                        <SlUserUnfollow />{' '}
+                        <span className="ml-1">Unfollow</span>
                     </>
                 ) : (
                     <>
