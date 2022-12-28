@@ -1,5 +1,5 @@
 import { getGlobalArticles, getLocalArticles } from 'features/articleSlice';
-import { useAppDispatch, useArticle, useAuth } from 'store/hooks';
+import { useAppDispatch, useAuth } from 'store/hooks';
 import React, { useEffect, useState } from 'react';
 import { getToken } from 'utilities/token';
 

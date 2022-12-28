@@ -2,8 +2,11 @@ import React from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { FiSettings } from 'react-icons/fi';
+import { useAuth } from '@/store/hooks';
 
 export default function ProfileHeader() {
+    const { user } = useAuth();
+
     return (
         <header className="flex flex-col items-center bg-gray-500/10 py-6">
             <Image
@@ -13,7 +16,9 @@ export default function ProfileHeader() {
                 alt="profile"
                 className="rounded-full"
             />
-            <h1 className="text-center font-bold text-lg py-3">String</h1>
+            <h1 className="text-center font-bold text-lg py-3">
+                {user?.username}
+            </h1>
             <Link href="/settings" className="btn-secondary">
                 <FiSettings className="text-gray-600/50 mr-1" />
                 <span className="text-gray-600/60">Edit Settings</span>

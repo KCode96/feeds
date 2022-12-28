@@ -1,4 +1,4 @@
-import React, { FormEvent, useEffect, useState } from 'react';
+import { FormEvent, useEffect, useState } from 'react';
 
 import { Button, Input, Textarea } from 'components/Form';
 import Layout from 'components/Main/Layout';
@@ -7,7 +7,6 @@ import { useAppDispatch, useAuth } from 'store/hooks';
 import { updateUser } from 'features/userSlice';
 
 export default function index() {
-    const [isLoading, setIsLoading] = useState<boolean>(false);
     const [formData, setFormData] = useState({
         username: '',
         image: '',
@@ -26,13 +25,14 @@ export default function index() {
     };
 
     useEffect(() => {
-        setFormData({
-            ...formData,
-            username: user?.username,
-            email: user?.email,
-            image: user?.image,
-            bio: user?.bio,
-        });
+        if (user)
+            setFormData({
+                ...formData,
+                username: user!.username,
+                email: user!.email,
+                bio: user!.bio,
+                image: user!.image,
+            });
     }, [user]);
 
     const handleSubmit = (e: FormEvent) => {

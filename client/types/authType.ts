@@ -6,6 +6,8 @@ export interface InitialAuthState {
 }
 
 export type User = {
+    image: string;
+    bio: string;
     id: string;
     username: string;
     email: string;

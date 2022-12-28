@@ -31,7 +31,7 @@ export const getLocalArticles = createAsyncThunk(
 );
 
 export const getArticlesByUserId = createAsyncThunk(
-    'article/getAllByUserId',
+    'article/getArticlesByUserId',
     async (id: string, { rejectWithValue }) => {
         try {
             const res = await articleClient.getArticlesByUserId(id);
@@ -43,11 +43,11 @@ export const getArticlesByUserId = createAsyncThunk(
     }
 );
 
-export const getArticlesByAuthorId = createAsyncThunk(
-    'article/getAllByAuthorId',
+export const getFavouriteArticlesByUserId = createAsyncThunk(
+    'article/getFavouriteArticlesByUserId',
     async (id: string, { rejectWithValue }) => {
         try {
-            const res = await articleClient.getArticlesByUserId(id);
+            const res = await articleClient.getFavouriteArticlesByUserId(id);
             return res.data.data;
         } catch (err: any) {
             const error = err.response.data.message;
@@ -59,7 +59,7 @@ export const getArticlesByAuthorId = createAsyncThunk(
 export const likeArticle = createAsyncThunk(
     'article/likeArticle',
     async (
-        { id, token }: { id: number; token: string },
+        { id, token }: { id: string; token: string },
         { rejectWithValue }
     ) => {
         try {
@@ -75,7 +75,7 @@ export const likeArticle = createAsyncThunk(
 export const unlikeArticle = createAsyncThunk(
     'article/unlikeArticle',
     async (
-        { id, token }: { id: number; token: string },
+        { id, token }: { id: string; token: string },
         { rejectWithValue }
     ) => {
         try {
@@ -178,8 +178,34 @@ export const articleSlice = createSlice({
             state.error = null;
         });
         builder.addCase(getArticlesByUserId.fulfilled, (state, action) => {
+            const token = getToken();
+
+            // If not logged in
+            if (!token) {
+                const formattedPayload = action.payload.map(
+                    (article: Article) => {
+                        return { ...article, isLiked: false };
+                    }
+                );
+                state.authorArticles = formattedPayload;
+            } else {
+                const user = decodeToken(token);
+                const id = user.id;
+
+                const formattedPayload = action.payload.map(
+                    (article: Article) => {
+                        if (article.likes.find(i => i == id)) {
+                            return { ...article, isLiked: true };
+                        }
+
+                        return { ...article, isLiked: false };
+                    }
+                );
+
+                state.authorArticles = formattedPayload;
+            }
+
             state.isLoading = false;
-            state.myArticles = action.payload;
         });
         builder.addCase(getArticlesByUserId.rejected, (state, action) => {
             state.isLoading = false;
@@ -215,45 +241,54 @@ export const articleSlice = createSlice({
 
             state.isLiking = false;
         });
-        // Get author articles
-        builder.addCase(getArticlesByAuthorId.pending, (state, action) => {
-            state.isLoading = true;
-            state.error = null;
-        });
-        builder.addCase(getArticlesByAuthorId.fulfilled, (state, action) => {
-            const token = getToken();
-
-            // If not logged in
-            if (!token) {
-                const formattedPayload = action.payload.map(
-                    (article: Article) => {
-                        return { ...article, isLiked: false };
-                    }
-                );
-                state.authorArticles = formattedPayload;
-            } else {
-                const user = decodeToken(token);
-                const id = user.id;
-
-                const formattedPayload = action.payload.map(
-                    (article: Article) => {
-                        if (article.likes.find(i => i == id)) {
-                            return { ...article, isLiked: true };
-                        }
-
-                        return { ...article, isLiked: false };
-                    }
-                );
-
-                state.authorArticles = formattedPayload;
+        // Get favourite articles by user id
+        builder.addCase(
+            getFavouriteArticlesByUserId.pending,
+            (state, action) => {
+                state.isLoading = true;
+                state.error = null;
             }
+        );
+        builder.addCase(
+            getFavouriteArticlesByUserId.fulfilled,
+            (state, action) => {
+                const token = getToken();
 
-            state.isLoading = false;
-        });
-        builder.addCase(getArticlesByAuthorId.rejected, (state, action) => {
-            state.isLoading = false;
-            state.error = action.payload as string;
-        });
+                // If not logged in
+                if (!token) {
+                    const formattedPayload = action.payload.map(
+                        (article: Article) => {
+                            return { ...article, isLiked: false };
+                        }
+                    );
+                    state.authorArticles = formattedPayload;
+                } else {
+                    const user = decodeToken(token);
+                    const id = user.id;
+
+                    const formattedPayload = action.payload.map(
+                        (article: Article) => {
+                            if (article.likes.find(i => i == id)) {
+                                return { ...article, isLiked: true };
+                            }
+
+                            return { ...article, isLiked: false };
+                        }
+                    );
+
+                    state.authorArticles = formattedPayload;
+                }
+
+                state.isLoading = false;
+            }
+        );
+        builder.addCase(
+            getFavouriteArticlesByUserId.rejected,
+            (state, action) => {
+                state.isLoading = false;
+                state.error = action.payload as string;
+            }
+        );
     },
 });
 

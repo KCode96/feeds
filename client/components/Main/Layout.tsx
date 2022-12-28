@@ -30,10 +30,8 @@ export default function Layout({ children, title, guard }: Props) {
         const token = getToken();
 
         // if no token, redirect to login page
-        if (!token) {
-            setChecking(false);
-            return;
-        }
+        if (!token) return setChecking(false);
+
         dispatch(authUser(token));
 
         if (guard && !token) router.push('/signin');
@@ -49,7 +47,7 @@ export default function Layout({ children, title, guard }: Props) {
             </Head>
             <Navbar navRef={navRef} />
             <main
-                className=" "
+                className=""
                 style={{
                     minHeight: `calc(100vh - ${
                         navSize.height + footSize.height

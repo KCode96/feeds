@@ -137,7 +137,25 @@ func CreateArticle(c *gin.Context) {
 	c.JSON(http.StatusCreated, gin.H{"success": true, "data": article})
 }
 
-func UpdateArticle(c *gin.Context) {}
+func UpdateArticle(c *gin.Context) {
+	id := c.Param("id")
+
+	var article *models.Article
+
+	result := models.DB.First(&article)
+
+	if result.RowsAffected == 0 {
+		c.JSON(http.StatusBadRequest, gin.H{"data": nil, "success": false, "message": "Unable to find tag with " + id})
+		return
+	}
+
+	c.ShouldBindJSON(&article)
+
+	models.DB.Save(&article)
+
+	c.JSON(http.StatusCreated, gin.H{"success": true, "data": article, "message": ""})
+
+}
 
 func DeleteArticle(c *gin.Context) {
 	id := c.Param("id")
@@ -148,11 +166,11 @@ func DeleteArticle(c *gin.Context) {
 	result := models.DB.Delete(&article, id)
 
 	if result.Error != nil || result.RowsAffected == 0 {
-		c.JSON(http.StatusBadRequest, gin.H{"data": nil, "success": false, "message": "Unable to find tag with " + id})
+		c.JSON(http.StatusNotFound, gin.H{"data": nil, "success": false, "message": "Unable to find tag with " + id})
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{"success": true})
+	c.AbortWithStatus(http.StatusOK)
 }
 
 func GetArticlesByAuthorId(c *gin.Context) {
@@ -162,8 +180,8 @@ func GetArticlesByAuthorId(c *gin.Context) {
 
 	result := models.DB.Where(&models.Article{AuthorId: aid}).Find(&articles)
 
-	if result.Error != nil || result.RowsAffected == 0 {
-		c.JSON(http.StatusBadRequest, gin.H{"data": nil, "success": false, "message": "Unable to find tag with " + aid})
+	if result.RowsAffected == 0 {
+		c.JSON(http.StatusBadRequest, gin.H{"data": []models.Article{}, "success": false, "message": ""})
 		return
 	}
 
@@ -182,6 +200,51 @@ func GetArticlesByAuthorId(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, gin.H{"success": true, "data": articles, "message": ""})
+}
+
+func GetFavouriteArticlesByAuthorId(c *gin.Context) {
+	aid := c.Param("id")
+
+	var articles []*models.Article
+
+	result := models.DB.Find(&articles)
+
+	// if no articles found, return an empty list
+	if result.RowsAffected == 0 {
+		c.JSON(http.StatusBadRequest, gin.H{"data": []models.Article{}, "success": false, "message": ""})
+		return
+	}
+
+	var response *Response
+
+	for i, a := range articles {
+
+		res, _ := http.Get("http://localhost:3001/api/users/" + a.AuthorId)
+
+		body, _ := ioutil.ReadAll(res.Body)
+
+		json.Unmarshal(body, &response)
+
+		articles[i].Author = response.Data
+	}
+
+	var filteredArticles []*models.Article
+
+	// filter the articles by likes
+	for _, a := range articles {
+		for _, l := range a.Likes {
+			if l == aid {
+				filteredArticles = append(filteredArticles, a)
+			}
+		}
+	}
+
+	if len(filteredArticles) == 0 {
+		c.JSON(http.StatusOK, gin.H{"success": true, "data": []models.Article{}, "message": ""})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"success": true, "data": filteredArticles, "message": ""})
 }
 
 func LikeArticle(c *gin.Context) {

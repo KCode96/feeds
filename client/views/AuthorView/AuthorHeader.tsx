@@ -6,6 +6,7 @@ import useUser from 'store/hooks/useUser';
 import { followUser, getAuthorDetails, unfollowUser } from 'features/userSlice';
 import { useRouter } from 'next/router';
 import { getToken } from 'utilities/token';
+import { FollowButton } from '@/components/Buttons';
 
 export default function AuthorHeader() {
     const dispatch = useAppDispatch();
@@ -35,7 +36,7 @@ export default function AuthorHeader() {
     };
 
     return (
-        <div className="py-6 bg-gray-500/10 flex flex-col items-center">
+        <div className="py-6 bg-gray-500/10 flex flex-col items-center md:py-8 lg:py-12 xl:py-16">
             <Image
                 src="/assets/images/smiley-cyrus.jpeg"
                 width={80}
@@ -46,26 +47,12 @@ export default function AuthorHeader() {
             <h1 className="text-center font-bold text-lg py-3">
                 {author?.username}
             </h1>
-            <button
-                className="flex items-center text-blue-500 border-blue-500 text-xs border px-2 py-1 rounded transition hover:bg-gray-600/10"
-                disabled={isFollowing || isLoading}
-                onClick={() => {
-                    if (author?.isFollowed) handleUnfollow();
-                    else handleFollow();
-                }}
-            >
-                {author?.isFollowed ? (
-                    <>
-                        <SlUserUnfollow />{' '}
-                        <span className="ml-1">Unfollow</span>
-                    </>
-                ) : (
-                    <>
-                        <SlUserFollowing />
-                        <span className="ml-1">Follow</span>
-                    </>
-                )}
-            </button>
+            <FollowButton
+                isFollowing={isFollowing}
+                isFollowed={author?.isFollowed as boolean}
+                handleFollow={handleFollow}
+                handleUnfollow={handleUnfollow}
+            />
         </div>
     );
 }

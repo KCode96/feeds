@@ -1,7 +1,7 @@
 package api
 
 import (
-	"feeds-articles/controllers"
+	c "feeds-articles/controllers"
 	m "feeds-articles/middlewares"
 
 	"github.com/gin-gonic/gin"
@@ -10,15 +10,16 @@ import (
 func AritcleRoute(r *gin.Engine) {
 	endpoint := "/api/articles"
 
-	r.GET(endpoint, controllers.GetAllArticles)
-	r.GET(endpoint+"/local", m.Auth(), controllers.GetLocalArticles)
-	r.POST(endpoint, m.Auth(), controllers.CreateArticle)
+	r.GET(endpoint, c.GetAllArticles)
+	r.GET(endpoint+"/local", m.Auth(), c.GetLocalArticles)
+	r.POST(endpoint, m.Auth(), c.CreateArticle)
 
-	r.GET(endpoint+"/:id", controllers.GetArticle)
-	r.PUT(endpoint+"/:id", controllers.UpdateArticle)
-	r.DELETE(endpoint+"/:id", controllers.DeleteArticle)
-	r.GET(endpoint+"/:id/like", m.Auth(), controllers.LikeArticle)
-	r.GET(endpoint+"/:id/unlike", m.Auth(), controllers.UnlikeArticle)
+	r.GET(endpoint+"/:id", c.GetArticle)
+	r.PUT(endpoint+"/:id", c.UpdateArticle)
+	r.DELETE(endpoint+"/:id", c.DeleteArticle)
+	r.GET(endpoint+"/:id/like", m.Auth(), c.LikeArticle)
+	r.GET(endpoint+"/:id/unlike", m.Auth(), c.UnlikeArticle)
 
-	r.GET(endpoint+"/author/:id", controllers.GetArticlesByAuthorId)
+	r.GET(endpoint+"/author/:id", c.GetArticlesByAuthorId)
+	r.GET(endpoint+"/author/:id/favorite", c.GetFavouriteArticlesByAuthorId)
 }

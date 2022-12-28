@@ -1,7 +1,11 @@
 import Feed from '@/components/Feed';
 import SelectArticleContainer from '@/components/SelectArticleContainer';
-import { getArticlesByAuthorId } from '@/features/articleSlice';
+import {
+    getArticlesByUserId,
+    getFavouriteArticlesByUserId,
+} from 'features/articleSlice';
 import { useAppDispatch, useArticle } from '@/store/hooks';
+
 import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
 import AuthorHeader from './AuthorHeader';
@@ -11,6 +15,8 @@ export default function AuthorView() {
         'default'
     );
 
+    const isDefault = selected === 'default';
+
     const dispatch = useAppDispatch();
 
     const router = useRouter();
@@ -19,10 +25,18 @@ export default function AuthorView() {
 
     const { authorArticles, isLoading } = useArticle();
 
+    console.log(authorId);
+
     useEffect(() => {
         if (!authorId) return;
-        dispatch(getArticlesByAuthorId(authorId as string));
-    }, [authorId]);
+
+        if (isDefault) {
+            dispatch(getArticlesByUserId(authorId as string));
+            return;
+        }
+
+        dispatch(getFavouriteArticlesByUserId(authorId as string));
+    }, [authorId, selected]);
 
     return (
         <div>
@@ -37,14 +51,20 @@ export default function AuthorView() {
                         <div>Loading articles...</div>
                     ) : (
                         <div>
-                            {authorArticles.map((a, idx) => (
-                                <Feed
-                                    authorName={a.author!.username}
-                                    isLiking={false}
-                                    key={idx}
-                                    {...a}
-                                />
-                            ))}
+                            {authorArticles.length == 0 ? (
+                                <div>No favourite articles are here... yet.</div>
+                            ) : (
+                                <>
+                                    {authorArticles.map((a, idx) => (
+                                        <Feed
+                                            authorName={a.author!.username}
+                                            isLiking={false}
+                                            key={idx}
+                                            {...a}
+                                        />
+                                    ))}
+                                </>
+                            )}
                         </div>
                     )}
                 </div>

@@ -1,9 +1,10 @@
-import React, { FormEvent, useState } from 'react';
+import React, { FormEvent, useEffect, useState } from 'react';
 import Layout from 'components/Main/Layout';
 
 import { Button, Input, Textarea } from 'components/Form';
 import { articleClient } from 'api/client';
 import { getToken } from 'utilities/token';
+import { useRouter } from 'next/router';
 
 export default function EditorPage() {
     const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -13,6 +14,8 @@ export default function EditorPage() {
             'I’ve been looking for the most efficient way to convert a structure into a sequence of bytes and send it through the network (either by TCP/UDP or HTTP/WebSocket). This article summarizes my whole research. I will consider several possible encodings and tell about their advantages and disadvantages.',
         body: 'The first article introduces different struct encodings and conducts a comparison in the CPU and memory usage between them. The second article will show the example of sending serialized binary data over a TCP connection. And in the third part of the series I will present my own serialization method that is efficient for certain cases. All the encodings will be compared by such parameters as time per operation, memory usage, number of memory allocations and data length',
     });
+
+    const router = useRouter();
 
     const handleChange = (e: FormEvent) => {
         const target = e.target as HTMLTextAreaElement;
@@ -25,9 +28,14 @@ export default function EditorPage() {
         setIsLoading(true);
 
         try {
-            await articleClient.createArticle(formData, getToken());
+            const res = await articleClient.createArticle(formData, getToken());
+
+            const articleId = res.data.data.id;
 
             setFormData({ title: '', description: '', body: '' });
+
+            // if published, redirect to the article page
+            router.push('/articles/' + articleId);
         } catch (err: any) {
             console.error(err.message);
         }

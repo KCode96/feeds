@@ -22,6 +22,10 @@ export async function getArticlesByUserId(id: string) {
     return await articleClient.get(`/author/${id}`);
 }
 
+export async function getFavouriteArticlesByUserId(id: string) {
+    return await articleClient.get(`/author/${id}/favorite`);
+}
+
 export async function getAuthor(id: string) {
     return await userClient.get(`/users/${id}`);
 }
@@ -30,10 +34,22 @@ export async function createArticle(body: CreateArticle, token: string) {
     return await articleClient.post('', body, getAxiosConfig(token));
 }
 
-export async function likeArticle(id: number, token: string) {
+export async function updateArticle(
+    id: string,
+    body: CreateArticle,
+    token: string
+) {
+    return await articleClient.put('/' + id, body, getAxiosConfig(token));
+}
+
+export async function deleteArticle(id: string, token: string) {
+    return await articleClient.delete('/' + id, getAxiosConfig(token));
+}
+
+export async function likeArticle(id: string, token: string) {
     return await articleClient.get(`${id}/like`, getAxiosConfig(token));
 }
 
-export async function unlikeArticle(id: number, token: string) {
+export async function unlikeArticle(id: string, token: string) {
     return await articleClient.get(`${id}/unlike`, getAxiosConfig(token));
 }

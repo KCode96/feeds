@@ -3,10 +3,11 @@ import type { TypedUseSelectorHook } from 'react-redux';
 
 import useAuth from './useAuth';
 import useArticle from './useArticle';
+import useAuthor from './useAuthor';
 import { RootState } from '..';
 import { AppDispatch } from '..';
 
 export const useAppDispatch: () => AppDispatch = useDispatch;
 export const useAppSelector: TypedUseSelectorHook<RootState> = useSelector;
 
-export { useAuth, useArticle };
+export { useAuth, useArticle, useAuthor };

@@ -57,7 +57,7 @@ export default function Feed({
                     </Link>
                     <div className="ml-3">
                         <Link href={'/' + authorId}>
-                            <div className="cursor-pointer text-blue-500  hover:underline hover:text-blue-400">
+                            <div className="cursor-pointer text-blue-500  hover:underline hover:text-blue-600">
                                 {authorName}
                             </div>
                         </Link>
