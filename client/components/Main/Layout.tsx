@@ -34,7 +34,6 @@ export default function Layout({ children, title, guard }: Props) {
             setChecking(false);
             return;
         }
-
         dispatch(authUser(token));
 
         if (guard && !token) router.push('/signin');

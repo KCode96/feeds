@@ -1,8 +1,9 @@
 import React, { FormEvent, useState } from 'react';
-import Layout from '../../components/Main/Layout';
+import Layout from 'components/Main/Layout';
 
-import { Button, Input, Textarea } from '../../components/Form';
+import { Button, Input, Textarea } from 'components/Form';
 import { articleClient } from 'api/client';
+import { getToken } from 'utilities/token';
 
 export default function EditorPage() {
     const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -24,7 +25,7 @@ export default function EditorPage() {
         setIsLoading(true);
 
         try {
-            await articleClient.createArticle(formData);
+            await articleClient.createArticle(formData, getToken());
 
             setFormData({ title: '', description: '', body: '' });
         } catch (err: any) {
@@ -69,9 +70,9 @@ export default function EditorPage() {
                     />
                     <select className="select-primary">
                         <option selected>Software</option>
-                        <option selected>New</option>
-                        <option selected>Sport</option>
-                        <option selected>Entertainment</option>
+                        <option>New</option>
+                        <option>Sport</option>
+                        <option>Entertainment</option>
                     </select>
                     <Button
                         type="submit"

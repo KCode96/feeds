@@ -45,5 +45,39 @@ function default_1(app) {
             success: true,
         });
     }));
+    app.get('/api/users/:id/follow', (0, middlewares_1.validateRequest)(schemas_1.userSchema.getUser), middlewares_1.protect, (req, res) => __awaiter(this, void 0, void 0, function* () {
+        const id = req.params.id;
+        const followerId = req.user.id;
+        const user = yield services_1.userService.followUser(id, followerId);
+        if (!user) {
+            res.status(400).json({
+                data: null,
+                message: 'User not found',
+                success: false,
+            });
+        }
+        res.status(200).json({
+            message: '',
+            success: true,
+            data: user,
+        });
+    }));
+    app.get('/api/users/:id/unfollow', (0, middlewares_1.validateRequest)(schemas_1.userSchema.getUser), middlewares_1.protect, (req, res) => __awaiter(this, void 0, void 0, function* () {
+        const id = req.params.id;
+        const followerId = req.user.id;
+        const user = yield services_1.userService.unfollowUser(id, followerId);
+        if (!user) {
+            res.status(400).json({
+                data: null,
+                message: '',
+                success: true,
+            });
+        }
+        res.status(200).json({
+            data: user,
+            message: '',
+            success: true,
+        });
+    }));
 }
 exports.default = default_1;

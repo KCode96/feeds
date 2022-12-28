@@ -3,11 +3,10 @@ import Image from 'next/image';
 import { RiHeart3Line } from 'react-icons/ri';
 import { Article } from 'types/articleType';
 import { formatDate } from 'utilities/format';
-import { useAppDispatch, useArticle, useAuth } from '@/store/hooks';
+import { useAppDispatch, useAuth } from '@/store/hooks';
 import { useRouter } from 'next/router';
 import { likeArticle, unlikeArticle } from 'features/articleSlice';
 import { getToken } from 'utilities/token';
-import { useState } from 'react';
 
 interface Props extends Article {
     authorName: string;

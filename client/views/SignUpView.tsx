@@ -56,53 +56,48 @@ export default function SignUpView() {
     };
 
     return (
-        <>
-            <div className="flex flex-col items-center">
-                <header className="text-center mb-6">
-                    <h1 className="text-3xl font-normal">Sign Up</h1>
-                    <Link
-                        href="/signin"
-                        className="text-blue-600 hover:underline hover:text-blue-500"
-                    >
-                        Have an account?
-                    </Link>
-                </header>
-                <form
-                    className="max-w-[500px]"
-                    onSubmit={e => e.preventDefault()}
+        <div className="container mx-auto flex flex-col items-center py-6">
+            <header className="text-center mb-6">
+                <h1 className="text-3xl font-normal">Sign Up</h1>
+                <Link
+                    href="/signin"
+                    className="text-blue-600 hover:underline hover:text-blue-500"
                 >
-                    <Input
-                        placeholder="Username"
-                        type="text"
-                        name="username"
-                        value={username}
-                        onChange={handleChange}
-                    />
-                    <Input
-                        placeholder="Email"
-                        type="email"
-                        className="my-4"
-                        name="email"
-                        onChange={handleChange}
-                        value={email}
-                    />
-                    <Input
-                        placeholder="Password"
-                        type="password"
-                        className="mb-4"
-                        name="password"
-                        onChange={handleChange}
-                        value={password}
-                    />
-                    <Button
-                        type="submit"
-                        title="Sign up"
-                        onClick={handleSubmit}
-                        isLoading={isLoading}
-                        disabled={isLoading}
-                    />
-                </form>
-            </div>
-        </>
+                    Have an account?
+                </Link>
+            </header>
+            <form className="w-full max-w-[500px]" onSubmit={e => e.preventDefault()}>
+                <Input
+                    placeholder="Username"
+                    type="text"
+                    name="username"
+                    value={username}
+                    onChange={handleChange}
+                />
+                <Input
+                    placeholder="Email"
+                    type="email"
+                    className="my-4"
+                    name="email"
+                    onChange={handleChange}
+                    value={email}
+                />
+                <Input
+                    placeholder="Password"
+                    type="password"
+                    className="mb-4"
+                    name="password"
+                    onChange={handleChange}
+                    value={password}
+                />
+                <Button
+                    type="submit"
+                    title="Sign up"
+                    onClick={handleSubmit}
+                    isSubmitting={isLoading}
+                    disabled={isLoading}
+                />
+            </form>
+        </div>
     );
 }

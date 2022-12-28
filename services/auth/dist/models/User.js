@@ -23,6 +23,8 @@ const UserSchema = new mongoose_1.default.Schema({
     image: { type: String, default: null },
     bio: { type: String, default: null },
     role: { type: String, enum: ['user', 'admin'], default: 'user' },
+    followers: { type: [String], default: [] },
+    followersCount: { type: Number, default: 0 },
     createdAt: { type: Date, default: Date.now },
     updatedAt: { type: Date, default: Date.now },
 }, {

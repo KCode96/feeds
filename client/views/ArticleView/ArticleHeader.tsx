@@ -2,7 +2,6 @@ import Link from 'next/link';
 import React from 'react';
 import { SlUserFollowing, SlUserUnfollow } from 'react-icons/sl';
 import { RiHeart3Line } from 'react-icons/ri';
-import { Article } from 'types/articleType';
 import { formatDate } from 'utilities';
 import Image from 'next/image';
 import { User } from 'types/authType';
@@ -11,9 +10,15 @@ type Props = {
     title: string;
     author: User | null;
     createdAt: Date;
+    authorId: string;
 };
 
-export default function ArticleHeader({ title, author, createdAt }: Props) {
+export default function ArticleHeader({
+    title,
+    author,
+    createdAt,
+    authorId,
+}: Props) {
     return (
         <div className="bg-[#333333]">
             <div className="container mx-auto py-6 md:py-8 lg:py-12">
@@ -22,7 +27,7 @@ export default function ArticleHeader({ title, author, createdAt }: Props) {
                 </h1>
                 <div className="flex items-center justify-between mt-4 sm:mt-6">
                     <div className="flex items-center">
-                        <Link href="">
+                        <Link href={`/${authorId}`}>
                             <Image
                                 src="/assets/images/smiley-cyrus.jpeg"
                                 width={40}
@@ -32,7 +37,7 @@ export default function ArticleHeader({ title, author, createdAt }: Props) {
                             />
                         </Link>
                         <div className="ml-2">
-                            <Link href="">
+                            <Link href={`/${authorId}`}>
                                 <h3 className=" text-sm text-white/90 transition hover:underline">
                                     {author?.username}
                                 </h3>

@@ -29,8 +29,8 @@ export function getAuthor(id: string) {
     return userClient.get(`/users/${id}`);
 }
 
-export function createArticle(body: CreateArticle) {
-    return articleClient.post('', body);
+export function createArticle(body: CreateArticle, token: string) {
+    return articleClient.post('', body, getConfig(token));
 }
 
 export function likeArticle(id: number, token: string) {

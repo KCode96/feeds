@@ -29,6 +29,7 @@ export default function ProfileView() {
                         <div>
                             {myArticles.map((a, idx) => (
                                 <Feed
+                                    isLiking={false}
                                     key={idx}
                                     {...a}
                                     authorName={user!.username}

@@ -11,7 +11,7 @@ func AritcleRoute(r *gin.Engine) {
 	endpoint := "/api/articles"
 
 	r.GET(endpoint, controllers.GetAllArticles)
-	r.POST(endpoint, controllers.CreateArticle)
+	r.POST(endpoint, m.Auth(), controllers.CreateArticle)
 
 	r.GET(endpoint+"/:id", controllers.GetArticle)
 	r.PUT(endpoint+"/:id", controllers.UpdateArticle)

@@ -18,7 +18,7 @@ type Article struct {
 	CreatedAt   time.Time      `json:"createdAt"`
 	UpdatedAt   time.Time      `json:"updatedAt"`
 	AuthorId    string         `validate:"required" json:"authorId"`
-	Author      *Author        `gorm:"-" json:"author"`
+	Author      Author        `gorm:"-" json:"author"`
 }
 
 type Like struct{}

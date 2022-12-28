@@ -30,6 +30,19 @@ export const getArticlesByUserId = createAsyncThunk(
     }
 );
 
+export const getArticlesByAuthorId = createAsyncThunk(
+    'article/getAllByAuthorId',
+    async (id: string, { rejectWithValue }) => {
+        try {
+            const res = await articleClient.getArticlesByUserId(id);
+            return res.data.data;
+        } catch (err: any) {
+            const error = err.response.data.message;
+            return rejectWithValue(error);
+        }
+    }
+);
+
 export const likeArticle = createAsyncThunk(
     'article/likeArticle',
     async (
@@ -68,6 +81,8 @@ const initialState: InitialArticleState = {
     articles: [],
     myArticles: [],
     favouriteArticles: [],
+    authorArticles: [],
+    authorFavouriteArticles: [],
     error: null,
 };
 
@@ -86,18 +101,32 @@ export const articleSlice = createSlice({
             state.error = null;
         });
         builder.addCase(getAllArticles.fulfilled, (state, action) => {
-            const user = decodeToken(getToken());
-            const id = user.id;
+            const token = getToken();
 
-            const formattedPayload = action.payload.map((article: Article) => {
-                if (article.likes.findIndex(i => i == id) == 0) {
-                    return { ...article, isLiked: true };
-                }
+            // If not logged in
+            if (!token) {
+                const formattedPayload = action.payload.map(
+                    (article: Article) => {
+                        return { ...article, isLiked: false };
+                    }
+                );
+                state.articles = formattedPayload;
+            } else {
+                const user = decodeToken(token);
+                const id = user.id;
 
-                return { ...article, isLiked: false };
-            });
+                const formattedPayload = action.payload.map(
+                    (article: Article) => {
+                        if (article.likes.find(i => i == id)) {
+                            return { ...article, isLiked: true };
+                        }
 
-            state.articles = formattedPayload;
+                        return { ...article, isLiked: false };
+                    }
+                );
+
+                state.articles = formattedPayload;
+            }
 
             state.isLoading = false;
         });
@@ -147,6 +176,45 @@ export const articleSlice = createSlice({
             );
 
             state.isLiking = false;
+        });
+        // Get author articles
+        builder.addCase(getArticlesByAuthorId.pending, (state, action) => {
+            state.isLoading = true;
+            state.error = null;
+        });
+        builder.addCase(getArticlesByAuthorId.fulfilled, (state, action) => {
+            const token = getToken();
+
+            // If not logged in
+            if (!token) {
+                const formattedPayload = action.payload.map(
+                    (article: Article) => {
+                        return { ...article, isLiked: false };
+                    }
+                );
+                state.authorArticles = formattedPayload;
+            } else {
+                const user = decodeToken(token);
+                const id = user.id;
+
+                const formattedPayload = action.payload.map(
+                    (article: Article) => {
+                        if (article.likes.find(i => i == id)) {
+                            return { ...article, isLiked: true };
+                        }
+
+                        return { ...article, isLiked: false };
+                    }
+                );
+
+                state.authorArticles = formattedPayload;
+            }
+
+            state.isLoading = false;
+        });
+        builder.addCase(getArticlesByAuthorId.rejected, (state, action) => {
+            state.isLoading = false;
+            state.error = action.payload as string;
         });
     },
 });

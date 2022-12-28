@@ -20,7 +20,7 @@ export default function SignInView() {
 
     useEffect(() => {
         dispatch(reset());
-        
+
         if (error) {
             toast(error);
             return;
@@ -49,7 +49,7 @@ export default function SignInView() {
     };
 
     return (
-        <div className="flex flex-col items-center">
+        <div className="container mx-auto flex flex-col items-center py-6">
             <header className="text-center mb-6">
                 <h1 className="text-3xl font-normal">Sign In</h1>
                 <Link
@@ -59,7 +59,7 @@ export default function SignInView() {
                     Need an account?
                 </Link>
             </header>
-            <form className="max-w-[500px]" onSubmit={e => e.preventDefault()}>
+            <form className="w-full max-w-[500px]" onSubmit={e => e.preventDefault()}>
                 <Input
                     placeholder="Email"
                     type="email"
@@ -81,6 +81,7 @@ export default function SignInView() {
                     title="Sign in"
                     onClick={handleSubmit}
                     isSubmitting={isLoading}
+                    disabled={isLoading}
                 />
             </form>
         </div>

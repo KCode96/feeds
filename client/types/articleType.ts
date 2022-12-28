@@ -22,6 +22,8 @@ export type InitialArticleState = {
     error: null | string;
     myArticles: [] | Article[];
     favouriteArticles: [] | Article[];
+    authorArticles: [] | Article[];
+    authorFavouriteArticles: [] | Article[];
 };
 
 export type CreateArticle = {

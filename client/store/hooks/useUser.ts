@@ -1,5 +1,5 @@
 import { useAppSelector } from '.';
-import { InitialUserState } from 'features/userSlice';
+import { InitialUserState } from 'types/userType';
 
 const useUser = () =>
     useAppSelector<InitialUserState>(state => state.user as InitialUserState);

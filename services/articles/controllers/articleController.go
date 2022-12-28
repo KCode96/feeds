@@ -37,7 +37,8 @@ func GetAllArticles(c *gin.Context) {
 
 		json.Unmarshal(body, &response)
 
-		articles[i].Author = &response.Data
+		articles[i].Author = response.Data
+
 	}
 
 	c.JSON(http.StatusOK, gin.H{"success": true, "data": articles, "message": ""})
@@ -64,12 +65,13 @@ func GetArticle(c *gin.Context) {
 
 	json.Unmarshal(body, &response)
 
-	article.Author = &response.Data
+	article.Author = response.Data
 
 	c.JSON(http.StatusOK, gin.H{"success": true, "data": article, "message": ""})
 }
 
 func CreateArticle(c *gin.Context) {
+	authorId := c.MustGet("id").(string)
 
 	var article models.Article
 
@@ -80,6 +82,7 @@ func CreateArticle(c *gin.Context) {
 
 	// Set empyt array
 	article.Likes = []string{}
+	article.AuthorId = authorId
 
 	result := models.DB.Create(&article)
 	if result.Error != nil {
@@ -118,6 +121,20 @@ func GetArticlesByAuthorId(c *gin.Context) {
 	if result.Error != nil || result.RowsAffected == 0 {
 		c.JSON(http.StatusBadRequest, gin.H{"data": nil, "success": false, "message": "Unable to find tag with " + aid})
 		return
+	}
+
+	var response *Response
+
+	for i, a := range articles {
+
+		res, _ := http.Get("http://localhost:3001/api/users/" + a.AuthorId)
+
+		body, _ := ioutil.ReadAll(res.Body)
+
+		json.Unmarshal(body, &response)
+
+		articles[i].Author = response.Data
+
 	}
 
 	c.JSON(http.StatusOK, gin.H{"success": true, "data": articles, "message": ""})

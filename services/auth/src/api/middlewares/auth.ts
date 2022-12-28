@@ -4,25 +4,22 @@ import { decodeToken } from '../../utils/token';
 
 // Protect handler that can access only users
 export const protect = (req: Request, res: Response, next: NextFunction) => {
-    // let token;
+    let token;
 
-    console.log(req);
+    if (
+        req.headers.authorization &&
+        req.headers.authorization.startsWith('Bearer')
+    )
+        token = req.headers.authorization.split(' ')[1];
 
-    // if (
-    //     req.headers.authorization &&
-    //     req.headers.authorization.startsWith('Bearer')
-    // )
-    //     token = req.headers.authorization.split(' ')[1];
+    if (!token) res.status(401).send('Not authorized');
 
-    // // if no token, throw an error
-    // if (!token) res.status(401).send('Not authorized');
-
-    // try {
-    //     const decoded = decodeToken(token as string);
-    //     req.user = decoded.user;
-    // } catch (err) {
-    //     res.status(401).send('Not authorized');
-    // }
+    try {
+        const decoded = decodeToken(token as string);
+        req.user = decoded.user;
+    } catch (err) {
+        res.status(401).send('Not authorized');
+    }
 
     return next();
 };
