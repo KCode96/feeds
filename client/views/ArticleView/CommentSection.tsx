@@ -1,21 +1,44 @@
-import { useAuthor } from '@/store/hooks';
-import React from 'react';
+import { useState } from 'react';
 import Image from 'next/image';
 
 import Comment from './Comment';
+import { useAuth, useAuthor } from 'store/hooks';
 import PostCommentEditor from './PostCommentEditor';
 import { formatDate } from 'utilities/format';
 import { FiEdit2 } from 'react-icons/fi';
-import router from 'next/router';
+import { useRouter } from 'next/router';
 import { MdDeleteForever } from 'react-icons/md';
 import { Button } from 'components/Buttons';
+import { articleClient } from 'api/client';
+import { getToken } from 'utilities/token';
+import Link from 'next/link';
 
 export default function CommentSection() {
+    const [isDeleting, setIsDeleting] = useState(false);
     const { isPostOwner, author, article } = useAuthor();
+    const { isAuthenticated } = useAuth();
+
+    const router = useRouter();
 
     const comments = [{ id: 1, text: 'Hello' }];
 
-    
+    const token = getToken();
+    const id = router.query.id as string;
+
+    const handleDelete = async () => {
+        setIsDeleting(true);
+
+        try {
+            await articleClient.deleteArticle(id, token);
+            setIsDeleting(false);
+            router.push('/');
+        } catch (err) {
+            console.log(err);
+        }
+
+        setIsDeleting(false);
+    };
+
     return (
         <div className=" mx-auto py-6  max-w-[700px]">
             {isPostOwner && (
@@ -46,8 +69,8 @@ export default function CommentSection() {
                             <span className="ml-1">Edit</span>
                         </Button>
                         <Button
-                            isSubmitting={false}
-                            onClick={() => {}}
+                            isSubmitting={isDeleting}
+                            onClick={handleDelete}
                             className="border-red-500 text-red-500 hover:bg-red-500"
                         >
                             <MdDeleteForever />
@@ -56,7 +79,26 @@ export default function CommentSection() {
                     </div>
                 </div>
             )}
-            <PostCommentEditor />
+            {isAuthenticated ? (
+                <PostCommentEditor />
+            ) : (
+                <div className="text-black/90 text-sm">
+                    <Link
+                        href="/signin"
+                        className="text-blue-500 mr-1 hover:underline hover:text-blue-600"
+                    >
+                        Sign in
+                    </Link>
+                    or
+                    <Link
+                        href="signup"
+                        className="text-blue-500 mx-1 hover:underline hover:text-blue-600"
+                    >
+                        Sign up
+                    </Link>
+                    to add comments on this article.
+                </div>
+            )}
             <div className="mt-4 space-y-3">
                 {comments.map((c, idx) => (
                     <Comment key={idx} />

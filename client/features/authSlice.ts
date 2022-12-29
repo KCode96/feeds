@@ -1,7 +1,7 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 
 import { authClient } from 'api/client';
-import { InitialAuthState, User, Error, Register } from 'types';
+import { InitialAuthState, User, Register } from 'types';
 import { decodeToken, removeToken, storeToken } from 'utilities';
 
 export const registerUser = createAsyncThunk(

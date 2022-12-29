@@ -300,12 +300,11 @@ func UnlikeArticle(c *gin.Context) {
 		return
 	}
 
-	var isLiked bool
+	isLiked := false
 	for _, v := range article.Likes {
 		if v == uid {
 			isLiked = true
-		} else {
-			isLiked = false
+			break
 		}
 	}
 

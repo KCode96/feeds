@@ -1,7 +1,7 @@
 package api
 
 import (
-	"feeds-articles/controllers"
+ 	c "feeds-articles/controllers"
 
 	"github.com/gin-gonic/gin"
 )
@@ -9,10 +9,10 @@ import (
 func TagRoute(r *gin.Engine) {
 	endpoint := "/api/tags"
 
-	r.GET(endpoint, controllers.GetTags)
-	r.POST(endpoint, controllers.CreateTag)
+	r.GET(endpoint, c.GetTags)
+	r.POST(endpoint, c.CreateTag)
 
-	r.GET(endpoint+"/:id", controllers.GetTag)
-	r.DELETE(endpoint+"/:id", controllers.DeleteTag)
-	r.PUT(endpoint+"/:id", controllers.UpdateTag)
+	r.GET(endpoint+"/:id", c.GetTag)
+	r.DELETE(endpoint+"/:id", c.DeleteTag)
+	r.PUT(endpoint+"/:id", c.UpdateTag)
 }

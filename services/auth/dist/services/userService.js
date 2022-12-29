@@ -21,6 +21,8 @@ const getUserById = (id) => __awaiter(void 0, void 0, void 0, function* () {
 exports.getUserById = getUserById;
 const updateUser = (id, body) => __awaiter(void 0, void 0, void 0, function* () {
     const user = yield models_1.User.findById(id).select(['-password', '-__v']);
+    if (!user)
+        return null;
     return yield models_1.User.findByIdAndUpdate(id, body, { new: true }).select([
         '-password',
         '-__v',
@@ -52,7 +54,7 @@ const unfollowUser = (id, followerId) => __awaiter(void 0, void 0, void 0, funct
     if (!user)
         return null;
     let followers = [...user.followers];
-    if (followers.findIndex(f => f == followerId) != 0)
+    if (!followers.find(f => f == followerId))
         return null;
     followers.splice(followerId);
     const followersCount = user.followersCount - 1;

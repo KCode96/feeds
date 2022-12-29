@@ -1,9 +1,6 @@
 import Feed from '@/components/Feed';
 import SelectArticleContainer from '@/components/SelectArticleContainer';
-import {
-    getArticlesByUserId,
-    getFavouriteArticlesByUserId,
-} from 'features/articleSlice';
+import { getArticles } from 'features/articleSlice';
 import { useAppDispatch, useArticle } from '@/store/hooks';
 
 import { useRouter } from 'next/router';
@@ -21,9 +18,9 @@ export default function AuthorView() {
 
     const router = useRouter();
 
-    const authorId = router.query.aid;
+    const authorId = router.query.aid as string;
 
-    const { authorArticles, isLoading } = useArticle();
+    const { isLoading, articles } = useArticle();
 
     console.log(authorId);
 
@@ -31,11 +28,11 @@ export default function AuthorView() {
         if (!authorId) return;
 
         if (isDefault) {
-            dispatch(getArticlesByUserId(authorId as string));
+            dispatch(getArticles({ userId: authorId }));
             return;
         }
 
-        dispatch(getFavouriteArticlesByUserId(authorId as string));
+        dispatch(getArticles({ userId: authorId, isFavourite: true }));
     }, [authorId, selected]);
 
     return (
@@ -51,11 +48,13 @@ export default function AuthorView() {
                         <div>Loading articles...</div>
                     ) : (
                         <div>
-                            {authorArticles.length == 0 ? (
-                                <div>No favourite articles are here... yet.</div>
+                            {articles.length == 0 ? (
+                                <div>
+                                    No favourite articles are here... yet.
+                                </div>
                             ) : (
                                 <>
-                                    {authorArticles.map((a, idx) => (
+                                    {articles.map((a, idx) => (
                                         <Feed
                                             authorName={a.author!.username}
                                             isLiking={false}

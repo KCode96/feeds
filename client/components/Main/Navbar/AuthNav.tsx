@@ -61,7 +61,7 @@ export default function AuthNav({ pathname }: Props) {
                     <span>Settings</span>
                 </li>
             </Link>
-            <Link href="/profile/:username">
+            <Link href="/profile">
                 <li className="flex items-center hover:text-red-500">
                     <Image
                         src="/assets/images/smiley-cyrus.jpeg"
@@ -72,7 +72,7 @@ export default function AuthNav({ pathname }: Props) {
                     />
                     <span
                         className={`ml-1 text-gray-600/50  ${
-                            pathname == '/profile/[username]' && 'text-black'
+                            pathname == '/profile' && 'text-black'
                         }`}
                     >
                         {user?.username}

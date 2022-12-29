@@ -10,20 +10,24 @@ const articleClient = axios.create({
     baseURL: NEXT_ARTICLEURL,
 });
 
-export async function getGlobalArticles() {
-    return await articleClient.get('');
-}
-
-export async function getLocalArticles(token: string) {
-    return await articleClient.get('/local', getAxiosConfig(token));
-}
-
-export async function getArticlesByUserId(id: string) {
-    return await articleClient.get(`/author/${id}`);
-}
-
-export async function getFavouriteArticlesByUserId(id: string) {
-    return await articleClient.get(`/author/${id}/favorite`);
+export async function getArticles({
+    token,
+    isGlobal,
+    isFavourite,
+    userId,
+}: {
+    token: string;
+    isGlobal: boolean;
+    isFavourite: boolean;
+    userId: string;
+}) {
+    if (!isGlobal && userId && !isFavourite)
+        return await articleClient.get(`/author/${userId}`);
+    if (isGlobal && !isFavourite && !userId) return await articleClient.get('');
+    if (token && !isGlobal && !isFavourite && !userId)
+        return await articleClient.get('/local', getAxiosConfig(token));
+    if (!isGlobal && isFavourite && userId)
+        return await articleClient.get(`/author/${userId}/favorite`);
 }
 
 export async function getAuthor(id: string) {
@@ -47,9 +51,11 @@ export async function deleteArticle(id: string, token: string) {
 }
 
 export async function likeArticle(id: string, token: string) {
+    console.log(id);
     return await articleClient.get(`${id}/like`, getAxiosConfig(token));
 }
 
 export async function unlikeArticle(id: string, token: string) {
+    console.log(id);
     return await articleClient.get(`${id}/unlike`, getAxiosConfig(token));
 }

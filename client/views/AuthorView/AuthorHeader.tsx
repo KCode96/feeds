@@ -1,6 +1,5 @@
 import React, { useEffect } from 'react';
 import Image from 'next/image';
-import { SlUserFollowing, SlUserUnfollow } from 'react-icons/sl';
 import { useAppDispatch, useAuth } from 'store/hooks';
 import useUser from 'store/hooks/useUser';
 import { followUser, getAuthorDetails, unfollowUser } from 'features/userSlice';
@@ -11,7 +10,7 @@ import { FollowButton } from '@/components/Buttons';
 export default function AuthorHeader() {
     const dispatch = useAppDispatch();
 
-    const { isFollowing, author, isLoading } = useUser();
+    const { isFollowing, author } = useUser();
     const { isAuthenticated } = useAuth();
 
     const router = useRouter();

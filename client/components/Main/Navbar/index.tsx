@@ -1,7 +1,6 @@
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import React from 'react';
-import { useSelector } from 'react-redux';
 import { useAuth } from '../../../store/hooks';
 import AuthNav from './AuthNav';
 
@@ -26,7 +25,6 @@ export default function Navbar({ navRef }: Props) {
                 <Link href="/" className="text-2xl font-bold text-blue-500">
                     Feeds
                 </Link>
-
                 {isAuthenticated ? (
                     <AuthNav pathname={pathname} />
                 ) : (

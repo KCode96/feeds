@@ -4,9 +4,11 @@ using FeedsComments.Models;
 using FeedsComments.Interfaces;
 using FeedComments.DTOs;
 using FeedComments.Helpers;
+using Microsoft.AspNetCore.Authorization;
 
 namespace FeedsComments.Controllers;
 
+[Authorize]
 [ApiController]
 [Route("/api/articles/:aid/comments")]
 public class CommentController : ControllerBase

@@ -12,6 +12,8 @@ export const getUserById = async (id: string) => {
 export const updateUser = async (id: string, body: Update) => {
     const user = await User.findById(id).select(['-password', '-__v']);
 
+    if (!user) return null;
+
     return await User.findByIdAndUpdate(id, body, { new: true }).select([
         '-password',
         '-__v',
@@ -52,7 +54,7 @@ export const unfollowUser = async (id: string, followerId: string) => {
 
     let followers = [...user.followers];
 
-    if (followers.findIndex(f => f == followerId) != 0) return null;
+    if (!followers.find(f => f == followerId)) return null;
 
     followers.splice(followerId as any);
     const followersCount = user.followersCount - 1;

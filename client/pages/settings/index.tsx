@@ -4,7 +4,8 @@ import { Button, Input, Textarea } from 'components/Form';
 import Layout from 'components/Main/Layout';
 import { logoutUser } from 'features/authSlice';
 import { useAppDispatch, useAuth } from 'store/hooks';
-import { updateUser } from 'features/userSlice';
+import { getUserById, updateUser } from 'features/userSlice';
+import useUser from 'store/hooks/useUser';
 
 export default function index() {
     const [formData, setFormData] = useState({
@@ -17,12 +18,19 @@ export default function index() {
 
     const dispatch = useAppDispatch();
 
-    const { user } = useAuth();
+    const authStates = useAuth();
+    const userStates = useUser();
+
+    const user = userStates.user || authStates.user;
 
     const handleChange = (e: FormEvent) => {
         const target = e.target as HTMLInputElement;
         setFormData({ ...formData, [target.name]: target.value });
     };
+
+    useEffect(() => {
+        dispatch(getUserById(user!?.id));
+    }, [user?.id]);
 
     useEffect(() => {
         if (user)
@@ -36,7 +44,7 @@ export default function index() {
     }, [user]);
 
     const handleSubmit = (e: FormEvent) => {
-        dispatch(updateUser({ body: formData, id: 'fdasjdflasj' }));
+        dispatch(updateUser({ body: formData, id: user!.id }));
     };
 
     return (

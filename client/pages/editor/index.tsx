@@ -2,20 +2,33 @@ import React, { FormEvent, useEffect, useState } from 'react';
 import Layout from 'components/Main/Layout';
 
 import { Button, Input, Textarea } from 'components/Form';
-import { articleClient } from 'api/client';
+import { articleClient, tagClient } from 'api/client';
 import { getToken } from 'utilities/token';
 import { useRouter } from 'next/router';
 
 export default function EditorPage() {
     const [isLoading, setIsLoading] = useState<boolean>(false);
+    const [tags, setTags] = useState<{ name: string }[]>([]);
+
     const [formData, setFormData] = useState({
-        title: 'Test title',
-        description:
-            'I’ve been looking for the most efficient way to convert a structure into a sequence of bytes and send it through the network (either by TCP/UDP or HTTP/WebSocket). This article summarizes my whole research. I will consider several possible encodings and tell about their advantages and disadvantages.',
-        body: 'The first article introduces different struct encodings and conducts a comparison in the CPU and memory usage between them. The second article will show the example of sending serialized binary data over a TCP connection. And in the third part of the series I will present my own serialization method that is efficient for certain cases. All the encodings will be compared by such parameters as time per operation, memory usage, number of memory allocations and data length',
+        title: '',
+        description: '',
+        body: '',
     });
 
     const router = useRouter();
+
+    useEffect(() => {
+        fetchTags();
+    }, []);
+
+    const fetchTags = async () => {
+        setIsLoading(true);
+        const res = await tagClient.getAllTags();
+        setTags(res.data.data);
+
+        setIsLoading(false);
+    };
 
     const handleChange = (e: FormEvent) => {
         const target = e.target as HTMLTextAreaElement;
@@ -77,10 +90,11 @@ export default function EditorPage() {
                         required
                     />
                     <select className="select-primary">
-                        <option selected>Software</option>
-                        <option>New</option>
-                        <option>Sport</option>
-                        <option>Entertainment</option>
+                        {tags.map((tag, idx) => (
+                            <option key={idx} value={tag.name} selected={idx == 0}>
+                                {tag.name}
+                            </option>
+                        ))}
                     </select>
                     <Button
                         type="submit"

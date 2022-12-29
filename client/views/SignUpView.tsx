@@ -66,7 +66,10 @@ export default function SignUpView() {
                     Have an account?
                 </Link>
             </header>
-            <form className="w-full max-w-[500px]" onSubmit={e => e.preventDefault()}>
+            <form
+                className="w-full max-w-[500px]"
+                onSubmit={e => e.preventDefault()}
+            >
                 <Input
                     placeholder="Username"
                     type="text"

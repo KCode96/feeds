@@ -22,7 +22,7 @@ export default function FollowButton({
     const { isAuthenticated } = useAuth();
 
     const handleClick = () => {
-        if (!isAuthenticated) return push('signin');
+        if (!isAuthenticated) return push('/signin');
         if (isFollowed) return handleUnfollow();
         handleFollow();
     };

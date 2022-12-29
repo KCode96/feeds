@@ -1,4 +1,4 @@
-import { getGlobalArticles, getLocalArticles } from 'features/articleSlice';
+import { getArticles } from 'features/articleSlice';
 import { useAppDispatch, useAuth } from 'store/hooks';
 import React, { useEffect, useState } from 'react';
 import { getToken } from 'utilities/token';
@@ -6,21 +6,18 @@ import { getToken } from 'utilities/token';
 export default function FeedSelect() {
     const [selected, setSelected] = useState<'default' | 'global'>('global');
 
-    const isGlobalFeeds = selected === 'global';
-
     const { isAuthenticated } = useAuth();
     const dispatch = useAppDispatch();
 
     const token = getToken();
 
     useEffect(() => {
-        if (isGlobalFeeds) {
-            dispatch(getGlobalArticles());
+        if (selected == 'global') {
+            dispatch(getArticles({ token, isGlobal: true }));
             return;
         }
 
-        console.log('Local');
-        dispatch(getLocalArticles(token));
+        dispatch(getArticles({ token }));
     }, [selected]);
 
     return (

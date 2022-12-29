@@ -45,13 +45,13 @@ export default function Feed({
     return (
         <div className="py-5 border-b border-gray-500/20">
             <div className="flex justify-between items-start">
-                <div className="flex">
+                <div className="flex items-center">
                     <Link href={'/' + authorId}>
                         <Image
                             src="/assets/images/smiley-cyrus.jpeg"
                             className="rounded-full"
-                            width={40}
-                            height={40}
+                            width={35}
+                            height={35}
                             alt="profile image"
                         />
                     </Link>

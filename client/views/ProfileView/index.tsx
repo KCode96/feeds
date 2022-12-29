@@ -1,21 +1,12 @@
-import React, { useEffect } from 'react';
-
-import { useAppDispatch, useArticle, useAuth } from 'store/hooks';
+import { useArticle, useAuth } from 'store/hooks';
 import SelectArticleType from './SelectArticleType';
 import ProfileHeader from './ProfileHeader';
-import { getArticlesByUserId } from 'features/articleSlice';
 import Feed from 'components/Feed';
 
 export default function ProfileView() {
-    const { isLoading, myArticles } = useArticle();
-
-    const dispatch = useAppDispatch();
+    const { isLoading, articles } = useArticle();
 
     const { user } = useAuth();
-
-    useEffect(() => {
-        dispatch(getArticlesByUserId(user!?.id));
-    }, []);
 
     return (
         <div>
@@ -27,7 +18,7 @@ export default function ProfileView() {
                         <div>Loading articles...</div>
                     ) : (
                         <div>
-                            {myArticles.map((a, idx) => (
+                            {articles.map((a, idx) => (
                                 <Feed
                                     isLiking={false}
                                     key={idx}

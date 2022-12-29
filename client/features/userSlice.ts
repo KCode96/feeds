@@ -8,7 +8,7 @@ export const updateUser = createAsyncThunk(
     async ({ id, body }: { id: string; body: Update }, { rejectWithValue }) => {
         try {
             const res = await userClient.update(id, body);
-            return res.data;
+            return res.data.data;
         } catch (err: any) {
             const error = err.response.data.message;
             return rejectWithValue(error);
@@ -91,6 +91,15 @@ export const userSlice = createSlice({
         },
     },
     extraReducers: builder => {
+        // Get user details
+        builder.addCase(getUserById.pending, (state, action) => {
+            state.isLoading = true;
+            state.error = null;
+        });
+        builder.addCase(getUserById.fulfilled, (state, action) => {
+            state.isLoading = false;
+            state.user = action.payload;
+        });
         // Update
         builder.addCase(updateUser.pending, (state, action) => {
             state.isLoading = true;
@@ -98,6 +107,7 @@ export const userSlice = createSlice({
         });
         builder.addCase(updateUser.fulfilled, (state, action) => {
             state.isLoading = false;
+            state.user = action.payload;
         });
         builder.addCase(updateUser.rejected, (state, action) => {
             state.isLoading = false;

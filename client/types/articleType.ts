@@ -1,7 +1,7 @@
 import { User } from './authType';
 
 export type Article = {
-    id: number;
+    id: string;
     title: string;
     body: string;
     description: string;
@@ -20,10 +20,6 @@ export type InitialArticleState = {
     isLiking: boolean;
     articles: [] | Article[];
     error: null | string;
-    myArticles: [] | Article[];
-    myFavouriteArticles: [] | Article[];
-    authorArticles: [] | Article[];
-    authorFavouriteArticles: [] | Article[];
 };
 
 export type CreateArticle = {

@@ -1,9 +1,22 @@
-import React, { useState } from 'react';
+import { getArticles } from '@/features/articleSlice';
+import { useAppDispatch, useAuth } from '@/store/hooks';
+import { useEffect, useState } from 'react';
 
 export default function SelectArticleType() {
     const [selected, setSelected] = useState<'default' | 'favourites'>(
         'default'
     );
+
+    const isDefault = selected == 'default';
+
+    const dispatch = useAppDispatch();
+
+    const { user } = useAuth();
+
+    useEffect(() => {
+        if (isDefault) dispatch(getArticles({ userId: user!?.id }));
+        else dispatch(getArticles({ isFavourite: true, userId: user!?.id }));
+    }, [selected]);
 
     return (
         <div className="border-b pb-[5px] ">

@@ -10,7 +10,6 @@ import {
     getAuthor,
     getAuthorArticle,
     likeAuthorArticle,
-    reset,
     unfollowAuthor,
     unlikeAuthorArticle,
 } from 'features/authorSlice';
@@ -104,7 +103,7 @@ export default function ArticleHeader() {
                                     <span className="ml-1">Edit</span>
                                 </Button>
                                 <Button
-                                    isSubmitting={false}
+                                    isSubmitting={isDeleting}
                                     onClick={handleDelete}
                                     className="border-red-500 text-red-500 hover:bg-red-500"
                                 >

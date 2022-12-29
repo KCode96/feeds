@@ -103,3 +103,7 @@
 /Users/moongoblin/Documents/Developments/feeds/services/comments/FeedComments/bin/Debug/net7.0/runtimes/win-arm64/native/e_sqlite3.dll
 /Users/moongoblin/Documents/Developments/feeds/services/comments/FeedComments/bin/Debug/net7.0/runtimes/win-x64/native/e_sqlite3.dll
 /Users/moongoblin/Documents/Developments/feeds/services/comments/FeedComments/bin/Debug/net7.0/runtimes/win-x86/native/e_sqlite3.dll
+/Users/moongoblin/Documents/Developments/feeds/services/comments/FeedComments/bin/Debug/net7.0/Microsoft.AspNetCore.Authentication.JwtBearer.dll
+/Users/moongoblin/Documents/Developments/feeds/services/comments/FeedComments/bin/Debug/net7.0/Scrutor.dll
+/Users/moongoblin/Documents/Developments/feeds/services/comments/FeedComments/bin/Debug/net7.0/Swashbuckle.AspNetCore.Filters.dll
+/Users/moongoblin/Documents/Developments/feeds/services/comments/FeedComments/bin/Debug/net7.0/Swashbuckle.AspNetCore.Filters.Abstractions.dll
