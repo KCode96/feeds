@@ -11,6 +11,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.unfollowUser = exports.followUser = exports.deleteUser = exports.updateUser = exports.getUserById = exports.getAllUsers = void 0;
 const models_1 = require("../models");
+const utils_1 = require("../utils");
 const getAllUsers = () => __awaiter(void 0, void 0, void 0, function* () {
     return yield models_1.User.find().select(['-password', '-__v']);
 });
@@ -23,6 +24,9 @@ const updateUser = (id, body) => __awaiter(void 0, void 0, void 0, function* () 
     const user = yield models_1.User.findById(id).select(['-password', '-__v']);
     if (!user)
         return null;
+    if (body.password)
+        body.password = yield (0, utils_1.hashPassword)(body.password);
+    // update the password
     return yield models_1.User.findByIdAndUpdate(id, body, { new: true }).select([
         '-password',
         '-__v',

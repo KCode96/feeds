@@ -1,3 +1,4 @@
+global using FeedComments.Helpers;
 using FeedsComments.Data;
 using FeedsComments.Interfaces;
 using FeedsComments.Repositories;
@@ -14,6 +15,19 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddAutoMapper(typeof(Program).Assembly);
 builder.Services.AddScoped<ICommentRepository, CommentRepository>();
 builder.Services.AddDbContext<DataContext>();
+builder.Services.AddTransient<Client>();
+builder.Services.AddTransient<Claim>();
+builder.Services.AddHttpContextAccessor();
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy(
+        "AllowAll",
+        builder =>
+        {
+            builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader();
+        }
+    );
+});
 builder.Services
     .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(
@@ -53,6 +67,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+app.UseCors("AllowAll");
 
 app.UseHttpsRedirection();
 

@@ -91,7 +91,11 @@ export default function EditorPage() {
                     />
                     <select className="select-primary">
                         {tags.map((tag, idx) => (
-                            <option key={idx} value={tag.name} selected={idx == 0}>
+                            <option
+                                key={idx}
+                                value={tag.name}
+                                selected={idx == 0}
+                            >
                                 {tag.name}
                             </option>
                         ))}

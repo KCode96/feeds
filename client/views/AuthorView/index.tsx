@@ -22,8 +22,6 @@ export default function AuthorView() {
 
     const { isLoading, articles } = useArticle();
 
-    console.log(authorId);
-
     useEffect(() => {
         if (!authorId) return;
 

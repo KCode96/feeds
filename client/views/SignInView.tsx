@@ -59,7 +59,10 @@ export default function SignInView() {
                     Need an account?
                 </Link>
             </header>
-            <form className="w-full max-w-[500px]" onSubmit={e => e.preventDefault()}>
+            <form
+                className="w-full max-w-[500px]"
+                onSubmit={e => e.preventDefault()}
+            >
                 <Input
                     placeholder="Email"
                     type="email"

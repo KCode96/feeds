@@ -107,3 +107,4 @@
 /Users/moongoblin/Documents/Developments/feeds/services/comments/FeedComments/bin/Debug/net7.0/Scrutor.dll
 /Users/moongoblin/Documents/Developments/feeds/services/comments/FeedComments/bin/Debug/net7.0/Swashbuckle.AspNetCore.Filters.dll
 /Users/moongoblin/Documents/Developments/feeds/services/comments/FeedComments/bin/Debug/net7.0/Swashbuckle.AspNetCore.Filters.Abstractions.dll
+/Users/moongoblin/Documents/Developments/feeds/services/comments/FeedComments/bin/Debug/net7.0/Newtonsoft.Json.dll

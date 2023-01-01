@@ -1,96 +1,157 @@
 using Microsoft.AspNetCore.Mvc;
 using AutoMapper;
-using FeedsComments.Models;
 using FeedsComments.Interfaces;
 using FeedComments.DTOs;
-using FeedComments.Helpers;
 using Microsoft.AspNetCore.Authorization;
+using FeedsComments.Models;
 
 namespace FeedsComments.Controllers;
 
 [Authorize]
 [ApiController]
-[Route("/api/articles/:aid/comments")]
+[Route("/api/articles/{aid}/comments")]
 public class CommentController : ControllerBase
 {
     private readonly IMapper _mapper;
     private readonly ICommentRepository _commentRepository;
+    private readonly Client _client;
+    private readonly Claim _claim;
 
-    public CommentController(IMapper mapper, ICommentRepository commentRepository)
+    public CommentController(
+        IMapper mapper,
+        ICommentRepository commentRepository,
+        Client client,
+        Claim claim
+    )
     {
         _mapper = mapper;
         _commentRepository = commentRepository;
+        _client = client;
+        _claim = claim;
     }
 
+    [AllowAnonymous]
     [HttpGet]
     [ProducesResponseType(200, Type = typeof(Response<IEnumerable<CommentDto>>))]
-    public IActionResult GetAllComments()
+    public async Task<IActionResult> GetAllComments([FromRoute] int aid)
     {
-        var response = new Response<List<CommentDto>>();
-        var comments = _mapper.Map<List<CommentDto>>(_commentRepository.GetComments());
+        var response = new Response<GetArticleDto>();
+        var article = await _client.GetArticleById(aid);
 
-        response.Data = comments;
+        var comments = _mapper.Map<List<GetCommentDto>>(await _commentRepository.GetComments(aid));
+
+        for (int i = 0; i < comments.Count; i++)
+        {
+            var commentor = await _client.GetCommentorById(comments[i].CommentorId);
+
+            comments[i].Commentor = commentor;
+        }
+
+        article.Comments = comments;
+
+        response.Data = _mapper.Map<GetArticleDto>(article);
 
         return Ok(response);
     }
 
     [HttpPost]
-    [ProducesResponseType(201, Type = typeof(Response<CommentDto>))]
-    public IActionResult CreateCommentInArticle(
-        [FromBody] CommentDto commentBody,
+    [ProducesResponseType(201)]
+    public async Task<IActionResult> CreateCommentInArticle(
+        [FromBody] CreateCommentDto commentBody,
         [FromRoute] int aid
     )
     {
-        var response = new Response<CommentDto>();
-        var comment = _commentRepository.CreateComment(aid, commentBody);
+        var response = new Response<GetCommentDto>();
 
-        response.Data = _mapper.Map<CommentDto>(comment);
+        var commentor = _claim.getCommentorClaim();
+
+        var newComment = _mapper.Map<Comment>(commentBody);
+
+        var article = await _client.GetArticleById(aid);
+
+        newComment.ArticleId = aid;
+        newComment.CommentorId = commentor!.Id;
+
+        await _commentRepository.CreateComment(newComment);
+
+        var comment = _mapper.Map<GetCommentDto>(newComment);
+
+        comment.Commentor = commentor;
+
+        response.Data = comment;
+
+        if (!ModelState.IsValid)
+            return BadRequest(ModelState);
 
         return Ok(response);
     }
 
-    [HttpPut("{id}")]
+    [AllowAnonymous]
+    [HttpPut("{cid}")]
     [ProducesResponseType(200, Type = typeof(Response<CommentDto>))]
     [ProducesResponseType(400, Type = typeof(Response<>))]
-    [ProducesResponseType(404, Type = typeof(Response<>))]
-    public IActionResult UpdateComment(
+    public async Task<IActionResult> UpdateComment(
         [FromRoute] int aid,
         [FromRoute] int cid,
-        [FromBody] CommentDto commentBody
+        [FromBody] UpdateCommentDto commentBody
     )
     {
-        var response = new Response<CommentDto>();
-        var comment = _commentRepository.UpdateComment(aid, cid, commentBody);
+        var response = new Response<GetCommentDto>();
 
-        if (comment == null)
+        var commentor = _claim.getCommentorClaim();
+
+        var comment = await _commentRepository.FindComment(aid, cid, commentor.Id);
+
+        if (comment is null)
         {
             response.Success = false;
+            response.Message = "Comment not found";
             return BadRequest(response);
         }
 
-        if (!_commentRepository.CommentExists(aid, cid))
-        {
-            response.Success = false;
-            response.Message = "Comment not found";
-            return NotFound(response);
-        }
+        comment.Body = commentBody.Body;
+
+        await _commentRepository.UpdateComment(comment);
+
+        response.Data = _mapper.Map<GetCommentDto>(comment);
+
+        response.Data.Commentor = commentor;
 
         return Ok(response);
     }
 
-    [HttpDelete("{id}")]
+    [HttpDelete("{cid}")]
     [ProducesResponseType(200, Type = typeof(Response<CommentDto>))]
     [ProducesResponseType(404, Type = typeof(Response<>))]
-    public IActionResult DeleteComment([FromRoute] int aid, [FromRoute] int cid)
+    public async Task<IActionResult> DeleteComment([FromRoute] int aid, [FromRoute] int cid)
     {
-        var response = new Response<CommentDto>();
+        var response = new Response<GetArticleDto>();
 
-        if (!_commentRepository.CommentExists(aid, cid))
+        var commentor = _claim.getCommentorClaim();
+
+        if (!await _commentRepository.CommentExists(aid, cid, commentor.Id))
         {
             response.Success = false;
             response.Message = "Comment not found";
             return NotFound(response);
         }
+
+        await _commentRepository.DeleteComment(aid, cid, commentor!.Id);
+
+        var article = await _client.GetArticleById(aid);
+
+        var comments = _mapper.Map<List<GetCommentDto>>(await _commentRepository.GetComments(aid));
+
+        for (int i = 0; i < comments.Count; i++)
+        {
+            var ctr = await _client.GetCommentorById(comments[i].CommentorId);
+
+            comments[i].Commentor = ctr;
+        }
+
+        article.Comments = comments;
+
+        response.Data = _mapper.Map<GetArticleDto>(article);
 
         return Ok(response);
     }

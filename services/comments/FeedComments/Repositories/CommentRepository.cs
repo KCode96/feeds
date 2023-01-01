@@ -1,41 +1,77 @@
-using FeedComments.DTOs;
+using AutoMapper;
 using FeedsComments.Data;
 using FeedsComments.Interfaces;
 using FeedsComments.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace FeedsComments.Repositories;
 
 public class CommentRepository : ICommentRepository
 {
     private DataContext _context;
+    private IMapper _mapper;
 
-    public CommentRepository(DataContext context)
+    public CommentRepository(DataContext context, IMapper mapper)
     {
         _context = context;
+        _mapper = mapper;
     }
 
-    public ICollection<Comment> GetComments()
+    public async Task<List<Comment>> GetComments(int aid)
     {
-        return _context.Comments.ToList();
+        return await _context.Comments.Where(c => c.ArticleId == aid).ToListAsync();
     }
 
-    public Comment CreateComment(int aid, CommentDto commentBody)
+    public async Task<bool> CreateComment(Comment comment)
     {
-        throw new NotImplementedException();
+        _context.Add(comment);
+        return await Save();
     }
 
-    public Comment UpdateComment(int aid, int cid, CommentDto commentBody)
+    public async Task<bool> UpdateComment(Comment comment)
     {
-        throw new NotImplementedException();
+        _context.Update(comment);
+        return await Save();
     }
 
-    public Comment DeleteComment(int aid, int cid)
+    public async Task<Comment> DeleteComment(int aid, int cid, string commentorId)
     {
-        throw new NotImplementedException();
+        var comment = await _context.Comments
+            .Where(c => c.ArticleId == aid && c.Id == cid)
+            .Where(c => c.CommentorId == commentorId)
+            .FirstOrDefaultAsync();
+
+        _context.Comments.Remove(comment!);
+        await _context.SaveChangesAsync();
+
+        return comment!;
     }
 
-    public bool CommentExists(int aid, int cid)
+    public async Task<Comment> FindComment(int cid, int aid, string commentorId)
     {
-        throw new NotImplementedException();
+        var comment = await _context.Comments
+            .Where(c => c.Id == cid && c.ArticleId == aid)
+            .Where(c => c.CommentorId == commentorId)
+            .FirstOrDefaultAsync();
+        return comment!;
+    }
+
+    public async Task<bool> CommentExists(int aid, int cid, string commentorId)
+    {
+        var comment = await _context.Comments
+            .Where(c => c.Id == cid && c.ArticleId == aid)
+            .Where(c => c.CommentorId == commentorId)
+            .FirstOrDefaultAsync();
+
+        if (comment is null)
+            return false;
+
+        return true;
+    }
+
+    public async Task<bool> Save()
+    {
+        var saved = await _context.SaveChangesAsync();
+        return saved > 0 ? true : false;
     }
 }

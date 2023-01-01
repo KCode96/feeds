@@ -28,12 +28,16 @@ export default function ArticleHeader() {
     const token = getToken();
 
     const id = router.query.id as string;
-    const authorId = author?.id;
+    const authorId = article?.authorId;
 
     useEffect(() => {
+        if (!id) return;
+
         dispatch(getAuthorArticle(id));
-        if (article?.authorId) dispatch(getAuthor(article?.authorId));
-    }, [id, article?.authorId]);
+
+        if (authorId) dispatch(getAuthor(article?.authorId));
+
+    }, [id, authorId]);
 
     const handleFollow = () => {
         dispatch(followAuthor({ id: authorId as string, token }));

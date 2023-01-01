@@ -28,7 +28,7 @@ func GetAllArticles(c *gin.Context) {
 		return
 	}
 
-	var response *Response
+	var response Response
 
 	for i, a := range articles {
 

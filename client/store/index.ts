@@ -3,14 +3,16 @@ import { configureStore } from '@reduxjs/toolkit';
 import authReducer from 'features/authSlice';
 import userReducer from 'features/userSlice';
 import articleReducer from 'features/articleSlice';
-import authorSlice from 'features/authorSlice';
+import authorReducer from 'features/authorSlice';
+import commentReducer from 'features/commentSlice';
 
 export const store = configureStore({
     reducer: {
         auth: authReducer,
         user: userReducer,
         article: articleReducer,
-        author: authorSlice,
+        author: authorReducer,
+        comment: commentReducer,
     },
     devTools: process.env.NODE_ENV !== 'production',
 });

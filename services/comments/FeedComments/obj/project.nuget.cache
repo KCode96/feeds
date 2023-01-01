@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "VYedKGz2BbJk9mP7LTJeSKJEjzMlnx5caFq9VOWGZEexPJp0qboAL0qQK7j29uVri6YHIviITKmo72KZLcbfJQ==",
+  "dgSpecHash": "JYSfu90atmOzHQTHyDKHGeW/OMXDJThGEXvVhQnOWu2IhIK47YdQq6oocf8EwYOQUJ8mj6nfzKmV24JA/1Wagw==",
   "success": true,
   "projectFilePath": "/Users/moongoblin/Documents/Developments/feeds/services/comments/FeedComments/FeedComments.csproj",
   "expectedPackageFiles": [
@@ -50,6 +50,7 @@
     "/Users/moongoblin/.nuget/packages/microsoft.win32.registry/5.0.0/microsoft.win32.registry.5.0.0.nupkg.sha512",
     "/Users/moongoblin/.nuget/packages/microsoft.win32.systemevents/5.0.0/microsoft.win32.systemevents.5.0.0.nupkg.sha512",
     "/Users/moongoblin/.nuget/packages/mono.texttemplating/2.2.1/mono.texttemplating.2.2.1.nupkg.sha512",
+    "/Users/moongoblin/.nuget/packages/newtonsoft.json/13.0.2/newtonsoft.json.13.0.2.nupkg.sha512",
     "/Users/moongoblin/.nuget/packages/scrutor/3.3.0/scrutor.3.3.0.nupkg.sha512",
     "/Users/moongoblin/.nuget/packages/sqlitepclraw.bundle_e_sqlite3/2.1.2/sqlitepclraw.bundle_e_sqlite3.2.1.2.nupkg.sha512",
     "/Users/moongoblin/.nuget/packages/sqlitepclraw.core/2.1.2/sqlitepclraw.core.2.1.2.nupkg.sha512",

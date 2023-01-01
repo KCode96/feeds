@@ -6,6 +6,7 @@ import { logoutUser } from 'features/authSlice';
 import { useAppDispatch, useAuth } from 'store/hooks';
 import { getUserById, updateUser } from 'features/userSlice';
 import useUser from 'store/hooks/useUser';
+import { useRouter } from 'next/router';
 
 export default function index() {
     const [formData, setFormData] = useState({
@@ -20,8 +21,10 @@ export default function index() {
 
     const authStates = useAuth();
     const userStates = useUser();
+    const router = useRouter();
 
     const user = userStates.user || authStates.user;
+    const isAuth = authStates.isAuthenticated;
 
     const handleChange = (e: FormEvent) => {
         const target = e.target as HTMLInputElement;
@@ -33,6 +36,11 @@ export default function index() {
     }, [user?.id]);
 
     useEffect(() => {
+        if (!isAuth) {
+            router.push('/');
+            return;
+        }
+
         if (user)
             setFormData({
                 ...formData,
@@ -41,7 +49,7 @@ export default function index() {
                 bio: user!.bio,
                 image: user!.image,
             });
-    }, [user]);
+    }, [user, isAuth]);
 
     const handleSubmit = (e: FormEvent) => {
         dispatch(updateUser({ body: formData, id: user!.id }));

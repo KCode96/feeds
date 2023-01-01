@@ -1,5 +1,6 @@
 import { User } from '../models';
 import { Update } from '../types';
+import { hashPassword } from '../utils';
 
 export const getAllUsers = async () => {
     return await User.find().select(['-password', '-__v']);
@@ -14,6 +15,9 @@ export const updateUser = async (id: string, body: Update) => {
 
     if (!user) return null;
 
+    if (body.password) body.password = await hashPassword(body.password);
+
+    // update the password
     return await User.findByIdAndUpdate(id, body, { new: true }).select([
         '-password',
         '-__v',
