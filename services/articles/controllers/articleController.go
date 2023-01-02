@@ -6,6 +6,8 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
+	"strconv"
+	"strings"
 
 	"github.com/gin-gonic/gin"
 )
@@ -17,15 +19,16 @@ type Response struct {
 }
 
 func GetAllArticles(c *gin.Context) {
+	limit, _ := strconv.Atoi(c.Query("limit"))
+	offset, _ := strconv.Atoi(c.Query("offset"))
+	tag := c.Query("tag")
 
 	var articles []*models.Article
 
-	result := models.DB.Find(&articles)
-
-	// if no articles, return an empty list
-	if result.RowsAffected == 0 {
-		c.JSON(http.StatusBadRequest, gin.H{"data": []models.Article{}, "success": false, "message": ""})
-		return
+	if tag == "" {
+		models.DB.Order("created_at desc").Limit(limit).Offset(offset).Find(&articles)
+	} else {
+		models.DB.Where("tag =?", strings.ToLower(tag)).Order("created_at desc").Limit(limit).Offset(offset).Find(&articles)
 	}
 
 	var response Response
@@ -100,6 +103,10 @@ func GetArticle(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"data": nil, "success": false, "message": "Unable to find tag with " + id})
 		return
 	}
+
+	// increase the number of viewsCount
+	article.ViewsCount += 1
+	models.DB.Save(&article)
 
 	var response Response
 

@@ -1,14 +1,19 @@
 import useArticle from 'store/hooks/useArticle';
 import Feed from 'components/Feed';
-import FeedPagination from './FeedPagination';
 import FeedSelect from './FeedSelect';
+import Pagination from '@/components/Pagination';
 
-export default function FeedSection() {
-    const { isLoading, articles, isLiking } = useArticle();
+type Props = {
+    selectedTag: string;
+    setSelectedTag: any;
+};
+
+export default function FeedSection({ selectedTag, setSelectedTag }: Props) {
+    const { isLoading, articles, isLiking, isLoadingMore } = useArticle();
 
     return (
         <div className="sm:mr-6 sm:order-1 sm:flex-1">
-            <FeedSelect />
+            <FeedSelect selectedTag={selectedTag} setSelectedTag={setSelectedTag} />
             <div className="">
                 {isLoading ? (
                     <div className="mt-2">Loading articles...</div>
@@ -29,7 +34,12 @@ export default function FeedSection() {
                                             isLiking={isLiking}
                                         />
                                     ))}
-                                    <FeedPagination />
+                                    {isLoadingMore && (
+                                        <div className="mt-2">
+                                            Loading more articles...
+                                        </div>
+                                    )}
+                                    <Pagination data={articles} />
                                 </>
                             )}
                         </div>

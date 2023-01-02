@@ -13,12 +13,13 @@ type Article struct {
 	Description string         `validate:"required" json:"description"`
 	Slug        string         `validate:"required" json:"slug"`
 	LikesCount  int            `json:"likesCount"`
-	Tags        pq.StringArray `gorm:"type:text[]" json:"tags"`
+	ViewsCount  int            `json:"viewsCount"`
+	Tag         string         ` json:"tag"`
 	Likes       pq.StringArray `gorm:"type:text[]" json:"likes"`
 	CreatedAt   time.Time      `json:"createdAt"`
 	UpdatedAt   time.Time      `json:"updatedAt"`
 	AuthorId    string         `validate:"required" json:"authorId"`
-	Author      Author        `gorm:"-" json:"author"`
+	Author      Author         `gorm:"-" json:"author"`
 }
 
 type Like struct{}

@@ -14,7 +14,7 @@ export default function AuthNav({ pathname }: Props) {
     const { user } = useAuth();
 
     return (
-        <ul className="flex items-center text-sm space-x-3 sm:text-base sm:space-x-5">
+        <ul className="flex items-center text-sm space-x-3 sm:text-sm md:text-base sm:space-x-5 ">
             <Link href="/">
                 <li
                     className={`text-gray-600/50 hidden ${

@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { CreateArticle } from 'types/articleType';
+import { CreateArticle, GetArticles, GetMoreArticles } from 'types';
 import { getAxiosConfig } from 'utilities/axios';
 
 const NEXT_AUTHURL = process.env.NEXT_PUBLIC_AUTHURL;
@@ -11,23 +11,42 @@ const articleClient = axios.create({
 });
 
 export async function getArticles({
+    tag,
     token,
     isGlobal,
     isFavourite,
     userId,
-}: {
-    token: string;
-    isGlobal: boolean;
-    isFavourite: boolean;
-    userId: string;
-}) {
+    limit,
+    offset,
+}: GetArticles) {
+    if (tag)
+        return await articleClient.get('', { params: { tag, limit, offset } });
+
     if (!isGlobal && userId && !isFavourite)
         return await articleClient.get(`/author/${userId}`);
-    if (isGlobal && !isFavourite && !userId) return await articleClient.get('');
+
+    if (isGlobal && !isFavourite && !userId)
+        return await articleClient.get('', { params: { limit, offset } });
+
     if (token && !isGlobal && !isFavourite && !userId)
         return await articleClient.get('/local', getAxiosConfig(token));
+
     if (!isGlobal && isFavourite && userId)
         return await articleClient.get(`/author/${userId}/favorite`);
+}
+
+export async function getMoreArticles({
+    token,
+    isGlobal,
+    limit,
+    offset,
+}: GetMoreArticles) {
+    if (isGlobal)
+        return await articleClient.get('', { params: { limit, offset } });
+    return await articleClient.get(
+        '/local',
+        getAxiosConfig(token, limit, offset)
+    );
 }
 
 export async function getAuthor(id: string) {

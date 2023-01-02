@@ -8,15 +8,21 @@ export const getArticles = createAsyncThunk(
     'article/getArticles',
     async (
         {
+            tag = '',
             token = '',
             isGlobal = false,
             isFavourite = false,
             userId = '',
+            limit = 3,
+            offset = 3,
         }: {
+            tag?: string;
             token?: string;
             isGlobal?: boolean;
             isFavourite?: boolean;
             userId?: string;
+            limit?: number;
+            offset?: number;
         },
         { rejectWithValue }
     ) => {
@@ -26,6 +32,40 @@ export const getArticles = createAsyncThunk(
                 isGlobal,
                 isFavourite,
                 userId,
+                limit,
+                offset,
+                tag,
+            });
+            return res!.data.data;
+        } catch (err: any) {
+            const error = err.response.data.message;
+            return rejectWithValue(error);
+        }
+    }
+);
+
+export const getMoreArticles = createAsyncThunk(
+    'article/getMoreArticles',
+    async (
+        {
+            token = '',
+            isGlobal = false,
+            limit,
+            offset,
+        }: {
+            token?: string;
+            isGlobal?: boolean;
+            limit?: number;
+            offset?: number;
+        },
+        { rejectWithValue }
+    ) => {
+        try {
+            const res = await articleClient.getMoreArticles({
+                token,
+                isGlobal,
+                limit,
+                offset,
             });
             return res!.data.data;
         } catch (err: any) {
@@ -68,6 +108,7 @@ export const unlikeArticle = createAsyncThunk(
 );
 
 const initialState: InitialArticleState = {
+    isLoadingMore: false,
     isLoading: false,
     isLiking: false,
     articles: [],
@@ -121,6 +162,45 @@ export const articleSlice = createSlice({
         builder.addCase(getArticles.rejected, (state, action) => {
             state.isLoading = false;
             state.error = action.payload as string;
+        });
+        // Get more articles
+        builder.addCase(getMoreArticles.pending, (state, action) => {
+            state.isLoadingMore = true;
+            state.error = null;
+        });
+        builder.addCase(getMoreArticles.fulfilled, (state, action) => {
+            const token = getToken();
+
+            // If not logged in
+            if (!token) {
+                const formattedPayload = action.payload.map(
+                    (article: Article) => {
+                        return { ...article, isLiked: false };
+                    }
+                );
+                state.articles = [...state.articles, ...formattedPayload];
+            } else {
+                const user = decodeToken(token);
+                const id = user.id;
+
+                const formattedPayload = action.payload.map(
+                    (article: Article) => {
+                        if (article.likes.find(a => a == id)) {
+                            return { ...article, isLiked: true };
+                        }
+
+                        return { ...article, isLiked: false };
+                    }
+                );
+
+                state.articles = [...state.articles, ...formattedPayload];
+            }
+
+            state.isLoadingMore = false;
+        });
+        builder.addCase(getMoreArticles.rejected, (state, action) => {
+            state.isLoadingMore = false;
+            state.articles = state.articles;
         });
 
         // Like artile

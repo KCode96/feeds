@@ -21,6 +21,7 @@ export default function Feed({
     createdAt,
     authorName,
     authorId,
+    tag,
     isLiked,
     isLiking,
 }: Props) {
@@ -94,10 +95,7 @@ export default function Feed({
                     </div>
                     <div className="flex items-center text-[11px] text-gray-500/60">
                         <div className="border rounded-full px-2 py-1">
-                            software
-                        </div>
-                        <div className="border rounded-full px-2 py-1 ml-1">
-                            trending
+                            {tag}
                         </div>
                     </div>
                 </div>

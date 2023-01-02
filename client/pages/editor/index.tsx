@@ -14,9 +14,12 @@ export default function EditorPage() {
         title: '',
         description: '',
         body: '',
+        tag: 'software',
     });
 
     const router = useRouter();
+
+    console.log(formData.tag);
 
     useEffect(() => {
         fetchTags();
@@ -45,7 +48,7 @@ export default function EditorPage() {
 
             const articleId = res.data.data.id;
 
-            setFormData({ title: '', description: '', body: '' });
+            setFormData({ title: '', description: '', body: '', tag: '' });
 
             // if published, redirect to the article page
             router.push('/articles/' + articleId);
@@ -89,12 +92,17 @@ export default function EditorPage() {
                         rows={14}
                         required
                     />
-                    <select className="select-primary">
+                    <select
+                        className="select-primary"
+                        onChange={handleChange}
+                        name="tag"
+                        value={formData.tag}
+                    >
                         {tags.map((tag, idx) => (
                             <option
                                 key={idx}
-                                value={tag.name}
-                                selected={idx == 0}
+                                value={tag.name.toLowerCase()}
+                                defaultValue={formData.tag}
                             >
                                 {tag.name}
                             </option>

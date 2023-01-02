@@ -1,8 +1,7 @@
 import { useState } from 'react';
 import Image from 'next/image';
 
-import Comment from './Comment';
-import { useAuth, useAuthor, useComment } from 'store/hooks';
+import { useAuth, useAuthor } from 'store/hooks';
 import PostCommentEditor from './PostCommentEditor';
 import { formatDate } from 'utilities/format';
 import { FiEdit2 } from 'react-icons/fi';
@@ -41,7 +40,7 @@ export default function CommentSection() {
     return (
         <>
             <div className=" mx-auto py-6  max-w-[700px]">
-                <div className='mb-4'>
+                <div className="mb-4">
                     {isPostOwner && (
                         <div className="flex items-center mb-6">
                             <Image
@@ -83,7 +82,7 @@ export default function CommentSection() {
                     {isAuthenticated ? (
                         <PostCommentEditor />
                     ) : (
-                        <div className="text-black/90 text-sm">
+                        <div className="text-black/90 text-sm text-center">
                             <Link
                                 href="/signin"
                                 className="text-blue-500 mr-1 hover:underline hover:text-blue-600"
@@ -92,7 +91,7 @@ export default function CommentSection() {
                             </Link>
                             or
                             <Link
-                                href="signup"
+                                href="/signup"
                                 className="text-blue-500 mx-1 hover:underline hover:text-blue-600"
                             >
                                 Sign up

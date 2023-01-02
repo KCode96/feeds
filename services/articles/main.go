@@ -24,6 +24,8 @@ func main() {
 	config.AllowAllOrigins = true
 	config.AllowCredentials = true
 	config.AddAllowHeaders("authorization")
+
+
 	r.Use(cors.New(config))
 
 	// connect to the database

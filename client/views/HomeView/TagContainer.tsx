@@ -1,7 +1,12 @@
 import { getAllTags } from 'api/client/tagClient';
 import React, { useEffect, useState } from 'react';
 
-export default function TagContainer() {
+type Props = {
+    selectedTag: string;
+    setSelectedTag: any;
+};
+
+export default function TagContainer({ setSelectedTag }: Props) {
     const [isLoading, setIsLoading] = useState(false);
     const [tags, setTags] = useState<{ name: string }[]>([]);
 
@@ -27,6 +32,7 @@ export default function TagContainer() {
                             <div
                                 key={idx}
                                 className="mb-2 mr-1 inline cursor-pointer text-sm bg-gray-700/70 rounded-full px-2 py-1 text-white hover:bg-gray-700"
+                                onClick={() => setSelectedTag(t.name)}
                             >
                                 {t.name}
                             </div>
