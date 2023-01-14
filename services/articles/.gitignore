@@ -1,2 +1,14 @@
-tmp/
+/tmp/
 .air.toml
+local.env
+
+# binarires for program and plugins
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+
+# any text file
+*.test
+
