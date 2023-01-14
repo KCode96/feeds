@@ -4,7 +4,7 @@ export function decodeToken(token: string) {
     const decoded = jwt_decode<any>(token);
 
     if (!decoded.user) return;
-    
+
     return decoded.user;
 }
 
@@ -17,6 +17,9 @@ export function removeToken() {
 }
 
 export function getToken() {
+    
+    if (typeof window == 'undefined') return;
+
     const item = localStorage.getItem('token');
     if (item == undefined) return;
 

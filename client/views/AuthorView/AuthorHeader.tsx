@@ -17,7 +17,7 @@ export default function AuthorHeader() {
 
     const id = router.query.aid as string;
 
-    const token = getToken() as string;
+    const token = getToken();
 
     useEffect(() => {
         dispatch(getAuthorDetails(id));
