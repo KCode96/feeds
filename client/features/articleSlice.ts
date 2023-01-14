@@ -132,6 +132,8 @@ export const articleSlice = createSlice({
         builder.addCase(getArticles.fulfilled, (state, action) => {
             const token = getToken();
 
+            console.log(action.payload);
+
             // If not logged in
             if (!token) {
                 const formattedPayload = action.payload.map(

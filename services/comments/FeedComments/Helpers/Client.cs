@@ -21,9 +21,8 @@ public class Client
     public Client()
     {
         IConfiguration config = new ConfigurationBuilder().AddJsonFile("appsettings.json").Build();
-
-        this.articleUrl = config["AppSettings:ArticleURL"]!;
-        this.userUrl = config["AppSettings:UserURL"]!;
+        this.articleUrl = Environment.GetEnvironmentVariable("ArticleURL")!;
+        this.userUrl = Environment.GetEnvironmentVariable("UserURL")!;
     }
 
     public async Task<Commentor> GetCommentorById(string id)

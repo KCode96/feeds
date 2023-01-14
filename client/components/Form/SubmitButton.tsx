@@ -19,7 +19,7 @@ export default function SubmitButton({
             type={type || 'button'}
             className={`${className} ${
                 isSubmitting ? 'bg-blue-400 cursor-not-allowed' : 'bg-blue-500'
-            } btn-primary transition  flex justify-center items-center min-w-[144px] min-h-[40px]`}
+            } btn-primary transition  flex justify-center items-center min-w-[110px] min-h-[40px]`}
             {...props}
             disabled={isSubmitting}
         >

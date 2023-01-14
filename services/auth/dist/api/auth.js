@@ -13,7 +13,6 @@ const middlewares_1 = require("./middlewares");
 const schemas_1 = require("../schemas");
 const services_1 = require("../services");
 function default_1(app) {
-    console.log(app.request);
     // POST /register
     app.post('/api/register', (0, middlewares_1.validateRequest)(schemas_1.authSchema.registerUser), (req, res) => __awaiter(this, void 0, void 0, function* () {
         const user = yield services_1.authService.register(req.body);
