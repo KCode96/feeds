@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
+	"os"
 	"strconv"
 	"strings"
 
@@ -17,6 +18,8 @@ type Response struct {
 	Message string        `json:"message"`
 	Success bool          `json:"success"`
 }
+
+var authURL = os.Getenv("AUTH_SERVICE_URL")
 
 func GetAllArticles(c *gin.Context) {
 	limit, _ := strconv.Atoi(c.Query("limit"))
@@ -35,7 +38,7 @@ func GetAllArticles(c *gin.Context) {
 
 	for i, a := range articles {
 
-		res, _ := http.Get("http://localhost:3001/api/users/" + a.AuthorId)
+		res, _ := http.Get(authURL + a.AuthorId)
 
 		body, _ := ioutil.ReadAll(res.Body)
 
@@ -63,7 +66,7 @@ func GetLocalArticles(c *gin.Context) {
 
 	for i, a := range articles {
 
-		res, _ := http.Get("http://localhost:3001/api/users/" + a.AuthorId)
+		res, _ := http.Get(authURL + a.AuthorId)
 
 		body, _ := ioutil.ReadAll(res.Body)
 
@@ -110,7 +113,7 @@ func GetArticle(c *gin.Context) {
 
 	var response Response
 
-	res, _ := http.Get("http://localhost:3001/api/users/63a70ba1e1257dc0e1915706")
+	res, _ := http.Get(authURL + article.AuthorId)
 
 	body, _ := ioutil.ReadAll(res.Body)
 
@@ -196,7 +199,7 @@ func GetArticlesByAuthorId(c *gin.Context) {
 
 	for i, a := range articles {
 
-		res, _ := http.Get("http://localhost:3001/api/users/" + a.AuthorId)
+		res, _ := http.Get(authURL + a.AuthorId)
 
 		body, _ := ioutil.ReadAll(res.Body)
 
@@ -226,7 +229,7 @@ func GetFavouriteArticlesByAuthorId(c *gin.Context) {
 
 	for i, a := range articles {
 
-		res, _ := http.Get("http://localhost:3001/api/users/" + a.AuthorId)
+		res, _ := http.Get(authURL + a.AuthorId)
 
 		body, _ := ioutil.ReadAll(res.Body)
 
