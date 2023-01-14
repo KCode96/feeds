@@ -6,6 +6,7 @@ import { useAppDispatch, useArticle } from '@/store/hooks';
 import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
 import AuthorHeader from './AuthorHeader';
+import { getToken, decodeToken } from 'utilities';
 
 export default function AuthorView() {
     const [selected, setSelected] = useState<'default' | 'favourites'>(
@@ -24,6 +25,13 @@ export default function AuthorView() {
 
     useEffect(() => {
         if (!authorId) return;
+
+        const uid = decodeToken(getToken()!).id;
+
+        if (authorId === uid) {
+            router.push('/profile');
+            return;
+        }
 
         if (isDefault) {
             dispatch(getArticles({ userId: authorId }));

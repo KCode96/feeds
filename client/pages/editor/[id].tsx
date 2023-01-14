@@ -48,6 +48,8 @@ export default function EditorPage({ id, title, body, description }: Props) {
 
             const articleId = res.data.data.id;
 
+            console.log(articleId);
+
             setFormData({ title: '', description: '', body: '' });
 
             // if published, redirect to the article page
@@ -107,6 +109,8 @@ export async function getServerSideProps(ctx: GetServerSidePropsContext) {
     const articleId = ctx.params!.id;
 
     const NEXT_ARTICLEURL = process.env.NEXT_PUBLIC_ARTICLEURL;
+
+    console.log(NEXT_ARTICLEURL);
 
     const res = await axios.get(NEXT_ARTICLEURL + '/' + articleId);
 

@@ -15,7 +15,7 @@ import CommentList from './CommentList';
 
 export default function CommentSection() {
     const [isDeleting, setIsDeleting] = useState(false);
-    const { isPostOwner, author, article } = useAuthor();
+    const { isPostOwner, author, article, isLoading } = useAuthor();
     const { isAuthenticated } = useAuth();
 
     const router = useRouter();
@@ -41,7 +41,7 @@ export default function CommentSection() {
         <>
             <div className=" mx-auto py-6  max-w-[700px]">
                 <div className="mb-4">
-                    {isPostOwner && (
+                    {!isLoading && isPostOwner && (
                         <div className="flex items-center mb-6">
                             <Image
                                 src="/assets/images/smiley-cyrus.jpeg"

@@ -62,7 +62,7 @@ export default function EditorPage() {
     return (
         <Layout title="Create A New Article">
             <div className="container  max-w-[800px] mx-auto py-6">
-                <form onSubmit={handleSubmit}>
+                <form>
                     <h1 className="text-2xl text-center">
                         Create a new article
                     </h1>
@@ -84,7 +84,7 @@ export default function EditorPage() {
                         required
                     />
                     <Textarea
-                        placeholder="Writte your article here"
+                        placeholder="Write your article here"
                         className="my-4"
                         name="body"
                         onChange={handleChange}
@@ -112,6 +112,7 @@ export default function EditorPage() {
                         type="submit"
                         title="Publish Article"
                         isSubmitting={isLoading}
+                        onClick={handleSubmit}
                     />
                 </form>
             </div>

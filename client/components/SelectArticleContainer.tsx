@@ -1,5 +1,3 @@
-import React from 'react';
-
 type Props = {
     selected: 'default' | 'favourites';
     setSelected: (input: 'default' | 'favourites') => void;

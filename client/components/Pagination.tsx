@@ -1,15 +1,21 @@
 import { getMoreArticles } from '@/features/articleSlice';
 import { useAppDispatch } from '@/store/hooks';
 import { useState } from 'react';
-import { Article } from 'types';
 import { getToken } from 'utilities/token';
+import { HiOutlineChevronLeft, HiOutlineChevronRight } from 'react-icons/hi';
 
-export default function Pagination({ data }: { data: Article[] }) {
+export default function Pagination({
+    totalCount,
+    isGlobal,
+}: {
+    totalCount: number;
+    isGlobal: boolean;
+}) {
     const [currentPage, setCurrentPage] = useState(1);
 
-    const pageSize = 3;
+    const pageSize = 5;
     const pageNumbers = Array.from(
-        Array(Math.ceil(data.length / pageSize) + 1).keys()
+        Array(Math.ceil(totalCount / pageSize)).keys()
     );
 
     const dispatch = useAppDispatch();
@@ -20,27 +26,31 @@ export default function Pagination({ data }: { data: Article[] }) {
 
         setCurrentPage(currentPage - 1);
 
-        dispatch(
-            getMoreArticles({
-                token,
-                isGlobal: true,
-                offset: (currentPage - 1) * pageSize,
-                limit: 3,
-            })
-        );
+        fetchMoreArticles();
     };
 
     const handleNext = () => {
         setCurrentPage(pageNumbers.length);
 
+        fetchMoreArticles();
+    };
+
+    const handleClick = (num: number) => {
+        console.log(num);
+
+        setCurrentPage(num);
+
+        fetchMoreArticles();
+    };
+    function fetchMoreArticles() {
         dispatch(
             getMoreArticles({
-                isGlobal: true,
+                isGlobal,
                 offset: (currentPage - 1) * pageSize,
-                limit: 3,
+                limit: pageSize,
             })
         );
-    };
+    }
 
     return (
         <div className="flex mt-6 flex-wrap">
@@ -50,7 +60,7 @@ export default function Pagination({ data }: { data: Article[] }) {
                 } px-4 py-2 rounded-l border border-r-0 hover:bg-gray-500/10`}
                 onClick={handlePrevious}
             >
-                Previous
+                <HiOutlineChevronLeft />
             </button>
             {pageNumbers.map(num => {
                 return (
@@ -60,20 +70,20 @@ export default function Pagination({ data }: { data: Article[] }) {
                             currentPage == num + 1
                                 ? 'bg-blue-500 text-white  hover:bg-blue-500'
                                 : ' hover:bg-gray-500/10'
-                        }   cursor-pointer py-2 px-4 border border-gray-500/20 text-blue-600 transition`}
-                        onClick={() => {
-                            setCurrentPage(num + 1);
-                        }}
+                        }   cursor-pointer py-2 px-4 border border-gray-500/20 text-blue-600`}
+                        onClick={() => handleClick(num + 1)}
                     >
                         {num + 1}
                     </button>
                 );
             })}
             <button
-                className="px-4 py-2 rounded-r border border-l-0 hover:bg-gray-500/10"
+                className={`px-4 py-2 rounded-r border border-l-0 ${
+                    pageNumbers.length === currentPage && 'hidden'
+                } hover:bg-gray-500/10`}
                 onClick={handleNext}
             >
-                Next
+                <HiOutlineChevronRight />
             </button>
         </div>
     );

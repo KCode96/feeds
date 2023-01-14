@@ -1,42 +1,19 @@
-import { getArticles } from 'features/articleSlice';
-import { useAppDispatch, useAuth } from 'store/hooks';
-import React, { useEffect, useState } from 'react';
-import { getToken } from 'utilities/token';
+import { useAuth } from 'store/hooks';
 
 type Props = {
     selectedTag: string;
     setSelectedTag: any;
+    setSelected: any;
+    selected: string;
 };
 
-export default function FeedSelect({ selectedTag, setSelectedTag }: Props) {
-    const [selected, setSelected] = useState('global');
-
+export default function FeedSelect({
+    selectedTag,
+    setSelectedTag,
+    setSelected,
+    selected,
+}: Props) {
     const { isAuthenticated } = useAuth();
-    const dispatch = useAppDispatch();
-
-    const token = getToken();
-
-    useEffect(() => {
-        if (!selectedTag) return;
-
-        setSelected(selectedTag);
-    }, [selectedTag]);
-
-    useEffect(() => {
-        if (selectedTag) {
-            dispatch(getArticles({ tag: selectedTag, limit: 3, offset: 0 }));
-            return;
-        }
-
-        if (selected == 'global') {
-            dispatch(
-                getArticles({ token, isGlobal: true, limit: 3, offset: 0 })
-            );
-            return;
-        }
-
-        dispatch(getArticles({ token, limit: 3, offset: 0 }));
-    }, [selected]);
 
     const handleSelect = (name: string) => {
         setSelected(name);

@@ -10,8 +10,8 @@ import { toast } from 'react-toastify';
 
 export default function SignInView() {
     const [{ email, password }, setFormData] = useState<Login>({
-        email: 'string!@gmail.com',
-        password: 'string',
+        email: '',
+        password: '',
     });
 
     const { isLoading, isAuthenticated, error } = useAuth();
@@ -31,7 +31,6 @@ export default function SignInView() {
     }, [isAuthenticated, error]);
 
     const handleChange = (e: FormEvent) => {
-        console.log(e);
         const target = e.target as HTMLInputElement;
 
         setFormData(prevState => {

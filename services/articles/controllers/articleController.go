@@ -19,6 +19,11 @@ type Response struct {
 	Success bool          `json:"success"`
 }
 
+type Result struct {
+	Articles      []models.Article `json:"articles"`
+	ArticlesCount int              `json:"articlesCount"`
+}
+
 func GetAllArticles(c *gin.Context) {
 	limit, _ := strconv.Atoi(c.Query("limit"))
 	offset, _ := strconv.Atoi(c.Query("offset"))
@@ -26,12 +31,13 @@ func GetAllArticles(c *gin.Context) {
 
 	var authURL = os.Getenv("AUTH_SERVICE_URL")
 
-	var articles []*models.Article
+	var articles []models.Article
+	var result Result
 
 	if tag == "" {
-		models.DB.Order("created_at desc").Limit(limit).Offset(offset).Find(&articles)
+		models.DB.Order("created_at desc").Find(&articles)
 	} else {
-		models.DB.Where("tag =?", strings.ToLower(tag)).Order("created_at desc").Limit(limit).Offset(offset).Find(&articles)
+		models.DB.Where("tag =?", strings.ToLower(tag)).Order("created_at desc").Find(&articles)
 	}
 
 	var response Response
@@ -44,22 +50,32 @@ func GetAllArticles(c *gin.Context) {
 
 		json.Unmarshal(body, &response)
 
-		fmt.Println(string(body))
-
 		articles[i].Author = response.Data
 	}
 
-	c.JSON(http.StatusOK, gin.H{"success": true, "data": articles, "message": ""})
+	if offset != 0 || limit != 0 {
+		result.Articles = paginate(articles, limit, offset)
+	} else {
+		result.Articles = articles
+	}
+
+	result.ArticlesCount = len(articles)
+
+	c.JSON(http.StatusOK, gin.H{"success": true, "data": result, "message": ""})
 }
 
 func GetLocalArticles(c *gin.Context) {
-	var articles []*models.Article
+
+	limit, _ := strconv.Atoi(c.Query("limit"))
+	offset, _ := strconv.Atoi(c.Query("offset"))
+
+	var articles []models.Article
 
 	uid := c.MustGet("id").(string)
 
 	// if no articles, return an empty list
-	result := models.DB.Find(&articles)
-	if result.RowsAffected == 0 {
+	res := models.DB.Find(&articles)
+	if res.RowsAffected == 0 {
 		c.JSON(http.StatusBadRequest, gin.H{"data": []models.Article{}, "success": false, "message": ""})
 		return
 	}
@@ -79,23 +95,33 @@ func GetLocalArticles(c *gin.Context) {
 		articles[i].Author = response.Data
 	}
 
-	var filteredArticles []*models.Article
+	var filteredArticles []models.Article
 
 	for _, a := range articles {
 		for _, f := range a.Author.Followers {
-			fmt.Println(f, uid)
 			if f == uid {
 				filteredArticles = append(filteredArticles, a)
 			}
 		}
 	}
 
+	var result Result
+
 	if len(filteredArticles) == 0 {
-		c.JSON(http.StatusOK, gin.H{"success": true, "data": []models.Article{}, "message": ""})
+		result.Articles = []models.Article{}
+		c.JSON(http.StatusOK, gin.H{"success": true, "data": result, "message": ""})
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{"success": true, "data": filteredArticles, "message": ""})
+	if offset != 0 || limit != 0 {
+		result.Articles = paginate(filteredArticles, limit, offset)
+	} else {
+		result.Articles = filteredArticles
+	}
+
+	result.ArticlesCount = len(filteredArticles)
+
+	c.JSON(http.StatusOK, gin.H{"success": true, "data": result, "message": ""})
 }
 
 func GetArticle(c *gin.Context) {
@@ -158,7 +184,7 @@ func UpdateArticle(c *gin.Context) {
 
 	var article *models.Article
 
-	result := models.DB.First(&article)
+	result := models.DB.First(&article, id)
 
 	if result.RowsAffected == 0 {
 		c.JSON(http.StatusBadRequest, gin.H{"data": nil, "success": false, "message": "Unable to find tag with " + id})
@@ -192,11 +218,11 @@ func DeleteArticle(c *gin.Context) {
 func GetArticlesByAuthorId(c *gin.Context) {
 	aid := c.Param("id")
 
-	var articles []*models.Article
+	var articles []models.Article
 
-	result := models.DB.Where(&models.Article{AuthorId: aid}).Find(&articles)
+	res := models.DB.Where(&models.Article{AuthorId: aid}).Find(&articles)
 
-	if result.RowsAffected == 0 {
+	if res.RowsAffected == 0 {
 		c.JSON(http.StatusBadRequest, gin.H{"data": []models.Article{}, "success": false, "message": ""})
 		return
 	}
@@ -217,18 +243,22 @@ func GetArticlesByAuthorId(c *gin.Context) {
 
 	}
 
-	c.JSON(http.StatusOK, gin.H{"success": true, "data": articles, "message": ""})
+	var result Result
+	result.Articles = articles
+	result.ArticlesCount = len(articles)
+
+	c.JSON(http.StatusOK, gin.H{"success": true, "data": result, "message": ""})
 }
 
 func GetFavouriteArticlesByAuthorId(c *gin.Context) {
 	aid := c.Param("id")
 
-	var articles []*models.Article
+	var articles []models.Article
 
-	result := models.DB.Find(&articles)
+	res := models.DB.Find(&articles)
 
 	// if no articles found, return an empty list
-	if result.RowsAffected == 0 {
+	if res.RowsAffected == 0 {
 		c.JSON(http.StatusBadRequest, gin.H{"data": []models.Article{}, "success": false, "message": ""})
 		return
 	}
@@ -248,7 +278,7 @@ func GetFavouriteArticlesByAuthorId(c *gin.Context) {
 		articles[i].Author = response.Data
 	}
 
-	var filteredArticles []*models.Article
+	var filteredArticles []models.Article
 
 	// filter the articles by likes
 	for _, a := range articles {
@@ -259,12 +289,18 @@ func GetFavouriteArticlesByAuthorId(c *gin.Context) {
 		}
 	}
 
+	var result Result
+
 	if len(filteredArticles) == 0 {
-		c.JSON(http.StatusOK, gin.H{"success": true, "data": []models.Article{}, "message": ""})
+		result.Articles = []models.Article{}
+		c.JSON(http.StatusOK, gin.H{"success": true, "data": result, "message": ""})
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{"success": true, "data": filteredArticles, "message": ""})
+	result.Articles = filteredArticles
+	result.ArticlesCount = len(filteredArticles)
+
+	c.JSON(http.StatusOK, gin.H{"success": true, "data": result, "message": ""})
 }
 
 func LikeArticle(c *gin.Context) {
@@ -352,4 +388,13 @@ func UnlikeArticle(c *gin.Context) {
 	models.DB.Save(&article)
 
 	c.JSON(http.StatusOK, gin.H{"success": true, "data": article, "message": ""})
+}
+
+func paginate(list []models.Article, limit int, offset int) []models.Article {
+
+	if len(list) < limit || len(list) < offset*limit {
+		return list[offset:]
+	}
+
+	return list[offset : limit+offset]
 }

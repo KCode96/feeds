@@ -11,6 +11,7 @@ export type Article = {
     tag: string;
     authorId: string;
     likesCount: number;
+    viewsCount: number;
     isLiked?: boolean;
     createdAt: Date;
     updatedAt: Date;
@@ -20,6 +21,7 @@ export type InitialArticleState = {
     isLoadingMore: boolean;
     isLoading: boolean;
     isLiking: boolean;
+    articlesCount: number;
     articles: [] | Article[];
     error: null | string;
 };

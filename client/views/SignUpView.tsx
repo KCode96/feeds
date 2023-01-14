@@ -12,9 +12,9 @@ import { toast } from 'react-toastify';
 export default function SignUpView() {
     const [isSubmitted, setIsSubmitted] = useState(false);
     const [{ username, email, password }, setFormData] = useState<Register>({
-        username: 'kiwi',
-        email: 'kiwi123@gmail.com',
-        password: 'kiwi123',
+        username: '',
+        email: '',
+        password: '',
     });
 
     const { isLoading, error } = useAuth();

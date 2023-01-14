@@ -113,6 +113,7 @@ const initialState: InitialArticleState = {
     isLiking: false,
     articles: [],
     error: null,
+    articlesCount: 0,
 };
 
 export const articleSlice = createSlice({
@@ -132,28 +133,28 @@ export const articleSlice = createSlice({
         builder.addCase(getArticles.fulfilled, (state, action) => {
             const token = getToken();
 
+            const articles = action.payload.articles;
+            const articlesCount = action.payload.articlesCount;
+
             // If not logged in
             if (!token) {
-                const formattedPayload = action.payload.map(
-                    (article: Article) => {
-                        return { ...article, isLiked: false };
-                    }
-                );
+                const formattedPayload = articles.map((article: Article) => {
+                    return { ...article, isLiked: false };
+                });
                 state.articles = formattedPayload;
             } else {
                 const user = decodeToken(token);
                 const id = user.id;
 
-                const formattedPayload = action.payload.map(
-                    (article: Article) => {
-                        if (article.likes.find(a => a == id)) {
-                            return { ...article, isLiked: true };
-                        }
-
-                        return { ...article, isLiked: false };
+                const formattedPayload = articles.map((article: Article) => {
+                    if (article.likes.find(a => a == id)) {
+                        return { ...article, isLiked: true };
                     }
-                );
 
+                    return { ...article, isLiked: false };
+                });
+
+                state.articlesCount = articlesCount;
                 state.articles = formattedPayload;
             }
 
@@ -171,32 +172,32 @@ export const articleSlice = createSlice({
         builder.addCase(getMoreArticles.fulfilled, (state, action) => {
             const token = getToken();
 
+            const articles = action.payload.articles;
+            const articlesCount = action.payload.articlesCount;
+
             // If not logged in
             if (!token) {
-                const formattedPayload = action.payload.map(
-                    (article: Article) => {
-                        return { ...article, isLiked: false };
-                    }
-                );
-                state.articles = [...state.articles, ...formattedPayload];
+                const formattedPayload = articles.map((article: Article) => {
+                    return { ...article, isLiked: false };
+                });
+                state.articles = [...formattedPayload];
             } else {
                 const user = decodeToken(token);
                 const id = user.id;
 
-                const formattedPayload = action.payload.map(
-                    (article: Article) => {
-                        if (article.likes.find(a => a == id)) {
-                            return { ...article, isLiked: true };
-                        }
-
-                        return { ...article, isLiked: false };
+                const formattedPayload = articles.map((article: Article) => {
+                    if (article.likes.find(a => a == id)) {
+                        return { ...article, isLiked: true };
                     }
-                );
 
-                state.articles = [...state.articles, ...formattedPayload];
+                    return { ...article, isLiked: false };
+                });
+
+                state.articles = [...formattedPayload];
             }
 
             state.isLoadingMore = false;
+            state.articlesCount = articlesCount;
         });
         builder.addCase(getMoreArticles.rejected, (state, action) => {
             state.isLoadingMore = false;

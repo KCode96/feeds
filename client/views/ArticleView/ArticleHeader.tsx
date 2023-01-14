@@ -36,7 +36,6 @@ export default function ArticleHeader() {
         dispatch(getAuthorArticle(id));
 
         if (authorId) dispatch(getAuthor(article?.authorId));
-
     }, [id, authorId]);
 
     const handleFollow = () => {

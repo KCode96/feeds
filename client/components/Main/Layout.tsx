@@ -54,13 +54,7 @@ export default function Layout({ children, title, guard }: Props) {
                     }px)`,
                 }}
             >
-                {checking ? (
-                    <div className="flex justify-center items-center">
-                        <Loader />
-                    </div>
-                ) : (
-                    children
-                )}
+                {children}
             </main>
             <Footer footRef={footRef} />
         </>

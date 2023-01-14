@@ -7,6 +7,7 @@ import { useAppDispatch, useAuth } from '@/store/hooks';
 import { useRouter } from 'next/router';
 import { likeArticle, unlikeArticle } from 'features/articleSlice';
 import { getToken } from 'utilities/token';
+import { BsEyeFill } from 'react-icons/bs';
 
 interface Props extends Article {
     authorName: string;
@@ -24,6 +25,7 @@ export default function Feed({
     tag,
     isLiked,
     isLiking,
+    viewsCount,
 }: Props) {
     const { isAuthenticated } = useAuth();
     const router = useRouter();
@@ -93,7 +95,13 @@ export default function Feed({
                     <div className="cursor-pointer text-xs text-gray-500/60 transition hover:text-blue-600">
                         Read more...
                     </div>
-                    <div className="flex items-center text-[11px] text-gray-500/60">
+                    <div className="flex items-center text-[11px] text-gray-500/60 space-x-2">
+                        <div className="flex items-center border rounded-full px-2 py-1">
+                            <BsEyeFill />
+                            <span className="text-gray-500/80 ml-1">
+                                {viewsCount}
+                            </span>
+                        </div>
                         <div className="border rounded-full px-2 py-1">
                             {tag}
                         </div>
