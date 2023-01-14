@@ -28,7 +28,7 @@ export type CreateArticle = {
     title: string;
     description: string;
     body: string;
-    tag: string;
+    tag?: string;
 };
 
 export type GetArticles = {

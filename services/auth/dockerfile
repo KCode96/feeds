@@ -3,15 +3,15 @@ FROM node:19.1.0-alpine3.16
 WORKDIR /app
 
 COPY package*.json tsconfig.json ./
-RUN yarn install
-
-RUN yarn global add ts-node
-RUN yarn global add typescript
-
 COPY . .
+
+RUN ls -a
+
+RUN yarn install
+RUN yarn build
 
 EXPOSE 3001
 
-CMD [ "yarn" , "dev"]
+CMD [ "node" , "./dist"]
 
 

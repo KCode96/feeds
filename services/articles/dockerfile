@@ -1,16 +1,14 @@
-FROM golang:alpine3.17
-
-ENV DB_URL="host=db-postgresql-syd1-96283-do-user-12994114-0.b.db.ondigitalocean.com user=doadmin password=AVNS_EU1LYCSS7HpHQRwitkM dbname=defaultdb port=25060 sslmode=require"
+# Build stage
+FROM golang:alpine3.17 AS builder
 
 WORKDIR /app
-COPY go.mod go.sum ./
-RUN go mod download
-
-RUN go install github.com/cosmtrek/air@latest
-
-
 COPY . .
+RUN go build -o main main.go
 
-EXPOSE 3001
+# Run stage
+FROM golang:alpine3.17 AS runner
+WORKDIR /app
+COPY --from=builder /app/main .
 
-ENTRYPOINT [ "air" ]
+EXPOSE 3002
+CMD ["/app/main"]

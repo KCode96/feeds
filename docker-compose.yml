@@ -1,31 +1,31 @@
 version: '3.8'
 
 services:
-    app:
-        build: './client'
-        ports:
-            - 3000:3000
-        volumes:
-            - ./client:/app
-    auth-service:
-        build: './services/auth'
-        ports:
-            - 3001:3001
-        environment:
-            MONGO_URL: mongodb+srv://moon:moon123@cluster0.4colf4i.mongodb.net/myFirstDatabase?retryWrites=true&w=majority
-            JWT_SECRET: my_secret
-            PORT: 3001
-        volumes:
-            - ./services/auth/:/app
+    # app:
+    #     build: './client'
+    #     ports:
+    #         - 3000:3000
+    #     volumes:
+    #         - ./client:/app
+    # auth-service:
+    #     build: './services/auth'
+    #     ports:
+    #         - 3001:3001
+    #     environment:
+    #         MONGO_URL: mongodb+srv://moon:moon123@cluster0.4colf4i.mongodb.net/myFirstDatabase?retryWrites=true&w=majority
+    #         JWT_SECRET: my_secret
+    #         PORT: 3001
+    #     volumes:
+    #         - ./services/auth/:/app
     article-service:
         build: './services/articles'
         ports:
             - 3002:3002
         environment:
             DB_URL: host=db-postgresql-syd1-96283-do-user-12994114-0.b.db.ondigitalocean.com user=doadmin password=AVNS_EU1LYCSS7HpHQRwitkM dbname=defaultdb port=25060 sslmode=require
-    #         PORT: 3002
-    #         JWT_SECRET: my_secret
-    #     volumes:
-    #         - ./services/articles/:/app
+            PORT: 3002
+            JWT_SECRET: my_secret
+        volumes:
+            - ./services/articles/:/app
 volumes:
     feeds:

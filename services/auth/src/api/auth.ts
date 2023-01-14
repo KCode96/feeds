@@ -5,8 +5,6 @@ import { authSchema } from '../schemas';
 import { authService } from '../services';
 
 export default function (app: Express) {
-    console.log(app.request);
-
     // POST /register
     app.post(
         '/api/register',

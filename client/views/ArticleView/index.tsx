@@ -1,6 +1,5 @@
 import { useAuthor } from '@/store/hooks';
 import React from 'react';
-import { Article } from 'types/articleType';
 import ArticleHeader from './ArticleHeader';
 import CommentSection from './CommentSection';
 
