@@ -19,12 +19,12 @@ type Response struct {
 	Success bool          `json:"success"`
 }
 
-var authURL = os.Getenv("AUTH_SERVICE_URL")
-
 func GetAllArticles(c *gin.Context) {
 	limit, _ := strconv.Atoi(c.Query("limit"))
 	offset, _ := strconv.Atoi(c.Query("offset"))
 	tag := c.Query("tag")
+
+	var authURL = os.Getenv("AUTH_SERVICE_URL")
 
 	var articles []*models.Article
 
@@ -38,11 +38,13 @@ func GetAllArticles(c *gin.Context) {
 
 	for i, a := range articles {
 
-		res, _ := http.Get(authURL + a.AuthorId)
+		res, _ := http.Get(authURL + "/" + a.AuthorId)
 
 		body, _ := ioutil.ReadAll(res.Body)
 
 		json.Unmarshal(body, &response)
+
+		fmt.Println(string(body))
 
 		articles[i].Author = response.Data
 	}
@@ -64,9 +66,11 @@ func GetLocalArticles(c *gin.Context) {
 
 	var response *Response
 
+	var authURL = os.Getenv("AUTH_SERVICE_URL")
+
 	for i, a := range articles {
 
-		res, _ := http.Get(authURL + a.AuthorId)
+		res, _ := http.Get(authURL + "/" + a.AuthorId)
 
 		body, _ := ioutil.ReadAll(res.Body)
 
@@ -113,7 +117,9 @@ func GetArticle(c *gin.Context) {
 
 	var response Response
 
-	res, _ := http.Get(authURL + article.AuthorId)
+	var authURL = os.Getenv("AUTH_SERVICE_URL")
+
+	res, _ := http.Get(authURL + "/" + article.AuthorId)
 
 	body, _ := ioutil.ReadAll(res.Body)
 
@@ -199,7 +205,9 @@ func GetArticlesByAuthorId(c *gin.Context) {
 
 	for i, a := range articles {
 
-		res, _ := http.Get(authURL + a.AuthorId)
+		var authURL = os.Getenv("AUTH_SERVICE_URL")
+
+		res, _ := http.Get(authURL + "/" + a.AuthorId)
 
 		body, _ := ioutil.ReadAll(res.Body)
 
@@ -229,7 +237,9 @@ func GetFavouriteArticlesByAuthorId(c *gin.Context) {
 
 	for i, a := range articles {
 
-		res, _ := http.Get(authURL + a.AuthorId)
+		var authURL = os.Getenv("AUTH_SERVICE_URL")
+
+		res, _ := http.Get(authURL + "/" + a.AuthorId)
 
 		body, _ := ioutil.ReadAll(res.Body)
 

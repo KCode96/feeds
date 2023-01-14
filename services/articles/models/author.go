@@ -3,7 +3,7 @@ package models
 import "github.com/lib/pq"
 
 type Author struct {
-	Id        uint           `gorm:"primaryKey" json:"id"`
+	Id        string         `json:"id"`
 	Username  string         `json:"username"`
 	Email     string         `json:"email"`
 	Role      string         `json:"role"`
