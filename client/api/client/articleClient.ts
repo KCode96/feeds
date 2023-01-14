@@ -1,5 +1,10 @@
 import axios from 'axios';
-import { CreateArticle, GetArticles, GetMoreArticles } from 'types';
+import {
+    CreateArticle,
+    GetArticles,
+    GetMoreArticles,
+    UpdateArticle,
+} from 'types';
 import { getAxiosConfig } from 'utilities/axios';
 
 const NEXT_AUTHURL = process.env.NEXT_PUBLIC_AUTHURL;
@@ -59,7 +64,7 @@ export async function createArticle(body: CreateArticle, token: string) {
 
 export async function updateArticle(
     id: string,
-    body: CreateArticle,
+    body: UpdateArticle,
     token: string
 ) {
     return await articleClient.put('/' + id, body, getAxiosConfig(token));

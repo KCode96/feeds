@@ -31,6 +31,12 @@ export type CreateArticle = {
     tag?: string;
 };
 
+export type UpdateArticle = {
+    title: string;
+    description: string;
+    body: string;
+};
+
 export type GetArticles = {
     tag: string;
     token: string;
