@@ -11,10 +11,11 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.forgotPassword = exports.login = exports.register = void 0;
 const models_1 = require("../models");
+const utils_1 = require("../utils");
 const register = ({ username, email, password }) => __awaiter(void 0, void 0, void 0, function* () {
     const user = yield models_1.User.findOne({ email }).select('-password');
     if (user)
-        throw new Error(`${email} already registered`);
+        throw new utils_1.ErrorResponse(`${email} already registered`, 400);
     const newUser = yield yield models_1.User.create({
         username,
         email,
@@ -27,7 +28,7 @@ exports.register = register;
 const login = ({ email, password }) => __awaiter(void 0, void 0, void 0, function* () {
     const user = yield models_1.User.findOne({ email });
     if (!user)
-        throw new Error(`${email} is not registered yet`);
+        throw new utils_1.ErrorResponse(`${email} is not registered yet`, 401);
     const isMatch = yield user.matchPassword(password);
     if (!isMatch)
         throw new Error(`Invalid credentials`);

@@ -1,6 +1,6 @@
 import { getMoreArticles } from '@/features/articleSlice';
 import { useAppDispatch } from '@/store/hooks';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { getToken } from 'utilities/token';
 import { HiOutlineChevronLeft, HiOutlineChevronRight } from 'react-icons/hi';
 
@@ -18,6 +18,10 @@ export default function Pagination({
         Array(Math.ceil(totalCount / pageSize)).keys()
     );
 
+    useEffect(() => {
+        fetchMoreArticles();
+    }, [currentPage]);
+
     const dispatch = useAppDispatch();
     const token = getToken();
 
@@ -25,26 +29,19 @@ export default function Pagination({
         if (currentPage == 1) return;
 
         setCurrentPage(currentPage - 1);
-
-        fetchMoreArticles();
     };
 
     const handleNext = () => {
-        setCurrentPage(pageNumbers.length);
-
-        fetchMoreArticles();
+        setCurrentPage(currentPage + 1);
     };
 
     const handleClick = (num: number) => {
-        console.log(num);
-
         setCurrentPage(num);
-
-        fetchMoreArticles();
     };
     function fetchMoreArticles() {
         dispatch(
             getMoreArticles({
+                token,
                 isGlobal,
                 offset: (currentPage - 1) * pageSize,
                 limit: pageSize,

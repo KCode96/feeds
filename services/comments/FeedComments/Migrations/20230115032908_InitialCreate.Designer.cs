@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FeedComments.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20230101072721_UpdateComment")]
-    partial class UpdateComment
+    [Migration("20230115032908_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

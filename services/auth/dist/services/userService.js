@@ -12,6 +12,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.unfollowUser = exports.followUser = exports.deleteUser = exports.updateUser = exports.getUserById = exports.getAllUsers = void 0;
 const models_1 = require("../models");
 const utils_1 = require("../utils");
+const utils_2 = require("../utils");
 const getAllUsers = () => __awaiter(void 0, void 0, void 0, function* () {
     return yield models_1.User.find().select(['-password', '-__v']);
 });
@@ -21,13 +22,21 @@ const getUserById = (id) => __awaiter(void 0, void 0, void 0, function* () {
 });
 exports.getUserById = getUserById;
 const updateUser = (id, body) => __awaiter(void 0, void 0, void 0, function* () {
-    const user = yield models_1.User.findById(id).select(['-password', '-__v']);
+    const user = yield models_1.User.findById(id);
     if (!user)
-        return null;
+        throw new utils_2.ErrorResponse(`User ${id} not found`, 400);
     if (body.password)
-        body.password = yield (0, utils_1.hashPassword)(body.password);
+        user.password = yield (0, utils_1.hashPassword)(body.password);
+    if (body.bio)
+        user.bio = body.bio;
+    if (body.email)
+        user.email = body.email;
+    if (body.image)
+        user.image = body.image;
+    if (body.username)
+        user.username = body.username;
     // update the password
-    return yield models_1.User.findByIdAndUpdate(id, body, { new: true }).select([
+    return yield models_1.User.findByIdAndUpdate(id, user, { new: true }).select([
         '-password',
         '-__v',
     ]);
@@ -40,11 +49,11 @@ exports.deleteUser = deleteUser;
 const followUser = (id, followerId) => __awaiter(void 0, void 0, void 0, function* () {
     const user = yield models_1.User.findById(id).select(['-password', '-__v']);
     if (!user)
-        return null;
+        throw new utils_2.ErrorResponse(`User ${id} not found`, 400);
     let followers = [...user.followers];
     // check if user already followed
     if (followers.findIndex(f => f == followerId) == 0)
-        return null;
+        throw new utils_2.ErrorResponse(`User already followed`, 400);
     followers = [...followers, followerId];
     const followersCount = user.followersCount + 1;
     return yield models_1.User.findByIdAndUpdate(id, {
@@ -56,10 +65,10 @@ exports.followUser = followUser;
 const unfollowUser = (id, followerId) => __awaiter(void 0, void 0, void 0, function* () {
     const user = yield models_1.User.findById(id).select(['-password', '-__v']);
     if (!user)
-        return null;
+        throw new utils_2.ErrorResponse(`User ${id} not found`, 400);
     let followers = [...user.followers];
     if (!followers.find(f => f == followerId))
-        return null;
+        throw new utils_2.ErrorResponse(`Follower ${followerId} not found`, 400);
     followers.splice(followerId);
     const followersCount = user.followersCount - 1;
     return yield models_1.User.findByIdAndUpdate(id, {

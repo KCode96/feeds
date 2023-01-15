@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import Image from 'next/image';
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import { formatDate, getToken } from 'utilities';
 import { useAppDispatch, useAuthor } from 'store/hooks';
