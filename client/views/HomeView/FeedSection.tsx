@@ -30,6 +30,8 @@ export default function FeedSection({ selectedTag, setSelectedTag }: Props) {
     }, [selectedTag]);
 
     useEffect(() => {
+        if (typeof window === 'undefined') return;
+
         if (selectedTag) {
             dispatch(getArticles({ tag: selectedTag, limit: 5, offset: 0 }));
             return;

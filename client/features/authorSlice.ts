@@ -166,8 +166,6 @@ export const authorSlice = createSlice({
 
                 const author = { ...action.payload.author };
 
-                console.log(author);
-
                 if (author.followers.find((fid: string) => fid == id))
                     author.isFollowed = true;
                 else author.isFollowed = false;

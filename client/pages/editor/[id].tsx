@@ -6,16 +6,8 @@ import { Button, Input, Textarea } from 'components/Form';
 import { articleClient } from 'api/client';
 import { getToken } from 'utilities/token';
 import { useRouter } from 'next/router';
-import { GetServerSidePropsContext } from 'next';
 
-type Props = {
-    id: string;
-    title: string;
-    body: string;
-    description: string;
-};
-
-export default function EditorPage({ id, title, body, description }: Props) {
+export default function EditorPage() {
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [formData, setFormData] = useState({
         title: '',
@@ -25,14 +17,18 @@ export default function EditorPage({ id, title, body, description }: Props) {
 
     const router = useRouter();
 
+    const articleId = router.query.id as string;
+
     const handleChange = (e: FormEvent) => {
         const target = e.target as HTMLTextAreaElement;
         setFormData({ ...formData, [target.name]: target.value });
     };
 
     useEffect(() => {
-        setFormData({ title, body, description });
-    }, []);
+        if (!articleId) return;
+
+        fetchArticle();
+    }, [articleId]);
 
     const handleSubmit = async (e: FormEvent) => {
         e.preventDefault();
@@ -40,15 +36,7 @@ export default function EditorPage({ id, title, body, description }: Props) {
         setIsLoading(true);
 
         try {
-            const res = await articleClient.updateArticle(
-                id,
-                formData,
-                getToken()
-            );
-
-            const articleId = res.data.data.id;
-
-            console.log(articleId);
+            await articleClient.updateArticle(articleId, formData, getToken());
 
             setFormData({ title: '', description: '', body: '' });
 
@@ -59,6 +47,18 @@ export default function EditorPage({ id, title, body, description }: Props) {
         }
 
         setIsLoading(false);
+    };
+
+    const fetchArticle = async () => {
+        const res = await axios.get(
+            process.env.NEXT_PUBLIC_ARTICLEURL + '/' + articleId
+        );
+
+        const data = res.data.data;
+
+        const { title, body, description } = data;
+
+        setFormData({ title, body, description });
     };
 
     return (
@@ -103,25 +103,4 @@ export default function EditorPage({ id, title, body, description }: Props) {
             </div>
         </Layout>
     );
-}
-
-export async function getServerSideProps(ctx: GetServerSidePropsContext) {
-    const articleId = ctx.params!.id;
-
-    const NEXT_ARTICLEURL = process.env.NEXT_PUBLIC_ARTICLEURL;
-
-    console.log(NEXT_ARTICLEURL);
-
-    const res = await axios.get(NEXT_ARTICLEURL + '/' + articleId);
-
-    const data = res.data.data;
-
-    const id = data.id;
-    const title = data.title;
-    const description = data.description;
-    const body = data.body;
-
-    return {
-        props: { id, title, description, body },
-    };
 }
