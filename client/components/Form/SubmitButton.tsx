@@ -25,7 +25,7 @@ export default function SubmitButton({
         >
             {isSubmitting ? (
                 <RotatingLines
-                    strokeColor="grey"
+                    strokeColor="white"
                     strokeWidth="3"
                     animationDuration="0.75"
                     width="26"

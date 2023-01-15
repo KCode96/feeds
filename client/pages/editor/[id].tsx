@@ -50,6 +50,8 @@ export default function EditorPage() {
     };
 
     const fetchArticle = async () => {
+        setIsLoading(true);
+
         const res = await axios.get(
             process.env.NEXT_PUBLIC_ARTICLEURL + '/' + articleId
         );
@@ -59,7 +61,11 @@ export default function EditorPage() {
         const { title, body, description } = data;
 
         setFormData({ title, body, description });
+
+        setIsLoading(false);
     };
+
+    console.log(isLoading);
 
     return (
         <Layout title="Create A New Article">

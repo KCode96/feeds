@@ -27,7 +27,7 @@ builder.Services.AddCors(options =>
             builder
                 .WithOrigins("http://localhost:3000", "https://feeds-nine.vercel.app")
                 .AllowAnyMethod()
-                .AllowAnyHeader()
+                .AllowAnyHeader();
         }
     );
 });
