@@ -48,11 +48,13 @@ export const getMoreArticles = createAsyncThunk(
     'article/getMoreArticles',
     async (
         {
+            tag = '',
             token = '',
             isGlobal = false,
             limit,
             offset,
         }: {
+            tag?: string;
             token?: string;
             isGlobal?: boolean;
             limit?: number;
@@ -62,6 +64,7 @@ export const getMoreArticles = createAsyncThunk(
     ) => {
         try {
             const res = await articleClient.getMoreArticles({
+                tag,
                 token,
                 isGlobal,
                 limit,

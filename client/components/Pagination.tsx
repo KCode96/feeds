@@ -3,15 +3,20 @@ import { useAppDispatch } from '@/store/hooks';
 import { useEffect, useState } from 'react';
 import { getToken } from 'utilities/token';
 import { HiOutlineChevronLeft, HiOutlineChevronRight } from 'react-icons/hi';
+import useArticle from '@/store/hooks/useComment';
 
 export default function Pagination({
     totalCount,
     isGlobal,
+    selectedTag,
 }: {
     totalCount: number;
     isGlobal: boolean;
+    selectedTag: string;
 }) {
     const [currentPage, setCurrentPage] = useState(1);
+
+    const { isLoading } = useArticle();
 
     const pageSize = 5;
     const pageNumbers = Array.from(
@@ -19,6 +24,8 @@ export default function Pagination({
     );
 
     useEffect(() => {
+        if (isLoading) return;
+
         fetchMoreArticles();
     }, [currentPage]);
 
@@ -41,6 +48,7 @@ export default function Pagination({
     function fetchMoreArticles() {
         dispatch(
             getMoreArticles({
+                tag: selectedTag,
                 token,
                 isGlobal,
                 offset: (currentPage - 1) * pageSize,

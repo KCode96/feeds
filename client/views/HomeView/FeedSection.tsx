@@ -41,7 +41,6 @@ export default function FeedSection({ selectedTag, setSelectedTag }: Props) {
             );
             return;
         }
-
         dispatch(getArticles({ token, limit: 5, offset: 0 }));
     }, [selected]);
 
@@ -79,6 +78,7 @@ export default function FeedSection({ selectedTag, setSelectedTag }: Props) {
                                         </div>
                                     )}
                                     <Pagination
+                                        selectedTag={selectedTag}
                                         totalCount={articlesCount}
                                         isGlobal={selected === 'global'}
                                     />

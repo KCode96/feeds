@@ -142,7 +142,6 @@ export const authorSlice = createSlice({
             state.author = formattedPayload;
             state.isFollowing = false;
         });
-        builder.addCase(getAuthor.rejected, (state, action) => {});
         builder.addCase(getAuthorArticle.pending, (state, action) => {
             state.isLoading = true;
             state.error = null;
@@ -152,20 +151,36 @@ export const authorSlice = createSlice({
 
             // If not logged in
             if (!token) {
-                const formattedPayload = { ...action.payload, isLiked: false };
-                state.article = formattedPayload;
+                const author = { ...action.payload.author, isFollowed: false };
+                const article = { ...action.payload, isLiked: false };
+
+                delete article.author;
+
+                state.article = article;
+                state.author = author;
             } else {
                 const user = decodeToken(token);
                 const id = user.id;
 
-                const formattedPayload = { ...action.payload };
+                const article = { ...action.payload };
+
+                const author = { ...action.payload.author };
+
+                console.log(author);
+
+                if (author.followers.find((fid: string) => fid == id))
+                    author.isFollowed = true;
+                else author.isFollowed = false;
 
                 if (action.payload.likes.find((l: string) => l == id))
-                    formattedPayload.isLiked = true;
-                else formattedPayload.isLiked = false;
+                    article.isLiked = true;
+                else article.isLiked = false;
 
-                state.article = formattedPayload;
-                state.isPostOwner = formattedPayload.authorId == id;
+                console.log(author);
+
+                state.article = article;
+                state.isPostOwner = article.authorId == id;
+                state.author = author;
             }
 
             state.isLoading = false;

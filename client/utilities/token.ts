@@ -9,6 +9,8 @@ export function decodeToken(token: string) {
 }
 
 export function storeToken(token: string) {
+    if (!token) return;
+
     localStorage.setItem(`token`, JSON.stringify(token));
 }
 
@@ -17,11 +19,10 @@ export function removeToken() {
 }
 
 export function getToken() {
-    
     if (typeof window == 'undefined') return;
 
     const item = localStorage.getItem('token');
-    if (item == undefined) return;
+    if (!item) return;
 
     const token = JSON.parse(item);
     return token;

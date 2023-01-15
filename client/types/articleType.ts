@@ -50,6 +50,7 @@ export type GetArticles = {
 };
 
 export type GetMoreArticles = {
+    tag: string,
     token: string;
     isGlobal: boolean;
     limit?: number;

@@ -4,6 +4,7 @@ import ArticleHeader from './ArticleHeader';
 import CommentSection from './CommentSection';
 
 export default function ArticleView() {
+    
     const { article } = useAuthor();
 
     return (

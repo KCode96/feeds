@@ -7,7 +7,6 @@ import { useAppDispatch, useAuthor } from 'store/hooks';
 import { useRouter } from 'next/router';
 import {
     followAuthor,
-    getAuthor,
     getAuthorArticle,
     likeAuthorArticle,
     unfollowAuthor,
@@ -20,7 +19,7 @@ import { articleClient } from 'api/client';
 
 export default function ArticleHeader() {
     const [isDeleting, setIsDeleting] = useState(false);
-    const { isFollowing, isLiking, author, article, isPostOwner } = useAuthor();
+    const { isFollowing, isLiking, article, isPostOwner, author } = useAuthor();
     const router = useRouter();
 
     const dispatch = useAppDispatch();
@@ -28,21 +27,18 @@ export default function ArticleHeader() {
     const token = getToken();
 
     const id = router.query.id as string;
-    const authorId = article?.authorId;
 
     useEffect(() => {
         if (!id) return;
 
         dispatch(getAuthorArticle(id));
-
-        if (authorId) dispatch(getAuthor(article?.authorId));
-    }, [id, authorId]);
+    }, [id]);
 
     const handleFollow = () => {
-        dispatch(followAuthor({ id: authorId as string, token }));
+        dispatch(followAuthor({ id: article?.authorId as string, token }));
     };
     const handleUnfollow = () => {
-        dispatch(unfollowAuthor({ id: authorId as string, token }));
+        dispatch(unfollowAuthor({ id: article?.authorId as string, token }));
     };
 
     const handleLike = () => {

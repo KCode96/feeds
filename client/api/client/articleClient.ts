@@ -24,6 +24,7 @@ export async function getArticles({
     limit,
     offset,
 }: GetArticles) {
+    console.log('tag');
     if (tag)
         return await articleClient.get('', { params: { tag, limit, offset } });
 
@@ -33,7 +34,7 @@ export async function getArticles({
     if (isGlobal && !isFavourite && !userId)
         return await articleClient.get('', { params: { limit, offset } });
 
-    if (token && !isGlobal && !isFavourite && !userId)
+    if (token && !isGlobal && !isFavourite && !userId && !tag)
         return await articleClient.get('/local', getAxiosConfig(token));
 
     if (!isGlobal && isFavourite && userId)
@@ -41,13 +42,20 @@ export async function getArticles({
 }
 
 export async function getMoreArticles({
+    tag,
     token,
     isGlobal,
     limit,
     offset,
 }: GetMoreArticles) {
-    if (isGlobal)
+    if (!isGlobal && tag) {
+        console.log();
+        return await articleClient.get('', { params: { tag, limit, offset } });
+    }
+
+    if (isGlobal && !tag)
         return await articleClient.get('', { params: { limit, offset } });
+
     return await articleClient.get(
         '/local',
         getAxiosConfig(token, limit, offset)
