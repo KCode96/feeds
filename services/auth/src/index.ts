@@ -16,7 +16,7 @@ function startServer() {
 
     startApp(app);
 
-    app.listen(3001, () => console.log(`Listening on port ${PORT}`));
+    app.listen(PORT, () => console.log(`Listening on port ${PORT}`));
 }
 
 startServer();
