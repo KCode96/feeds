@@ -67,6 +67,7 @@ export const authSlice = createSlice({
     initialState,
     reducers: {
         reset(state) {
+            console.log('reset...');
             return (state = initialState);
         },
     },
@@ -95,7 +96,6 @@ export const authSlice = createSlice({
         // Register
         builder.addCase(registerUser.pending, (state, action) => {
             state.isLoading = true;
-            state.error = null;
         });
         builder.addCase(registerUser.fulfilled, (state, action) => {
             state.isLoading = false;

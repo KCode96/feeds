@@ -22,8 +22,6 @@ export default function SignUpView() {
     const dispatch = useAppDispatch();
 
     useEffect(() => {
-        dispatch(reset());
-
         if (error) {
             toast(error);
             setIsSubmitted(false);
@@ -31,7 +29,11 @@ export default function SignUpView() {
         }
 
         if (isSubmitted && !error) router.push('/signin');
-    }, [error]);
+
+        () => {
+            dispatch(reset());
+        };
+    }, [dispatch, error, isSubmitted, setIsSubmitted]);
 
     const handleChange = (e: FormEvent) => {
         const target = e.target as HTMLInputElement;

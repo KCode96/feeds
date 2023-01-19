@@ -60,10 +60,9 @@ export default function Pagination({
     return (
         <div className="flex mt-6 flex-wrap">
             <button
-                className={`${
-                    currentPage == 1 && 'hidden'
-                } px-4 py-2 rounded-l border border-r-0 hover:bg-gray-500/10`}
+                className={`px-4 py-2 rounded-l border border-r-0 hover:bg-gray-500/10 disabled:bg-gray-50`}
                 onClick={handlePrevious}
+                disabled={currentPage == 1}
             >
                 <HiOutlineChevronLeft />
             </button>
@@ -83,10 +82,9 @@ export default function Pagination({
                 );
             })}
             <button
-                className={`px-4 py-2 rounded-r border border-l-0 ${
-                    pageNumbers.length === currentPage && 'hidden'
-                } hover:bg-gray-500/10`}
+                className={`px-4 py-2 rounded-r border border-l-0 hover:bg-gray-500/10 disabled:bg-gray-50`}
                 onClick={handleNext}
+                disabled={pageNumbers.length === currentPage}
             >
                 <HiOutlineChevronRight />
             </button>

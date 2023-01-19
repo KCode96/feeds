@@ -19,8 +19,6 @@ export default function SignInView() {
     const router = useRouter();
 
     useEffect(() => {
-        dispatch(reset());
-
         if (error) {
             toast(error);
             return;
@@ -28,6 +26,10 @@ export default function SignInView() {
 
         if (!isAuthenticated) return;
         router.push('/');
+        
+        () => {
+            dispatch(reset());
+        };
     }, [isAuthenticated, error]);
 
     const handleChange = (e: FormEvent) => {
