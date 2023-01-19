@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "/Users/moongoblin/Documents/Developments/feeds/services/comments/FeedComments/FeedComments.csproj": {}
+    "/Users/moongoblin/Documents/Developments/feeds/services/comments/FeedsComments/FeedComments.csproj": {}
   },
   "projects": {
-    "/Users/moongoblin/Documents/Developments/feeds/services/comments/FeedComments/FeedComments.csproj": {
+    "/Users/moongoblin/Documents/Developments/feeds/services/comments/FeedsComments/FeedComments.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/Users/moongoblin/Documents/Developments/feeds/services/comments/FeedComments/FeedComments.csproj",
+        "projectUniqueName": "/Users/moongoblin/Documents/Developments/feeds/services/comments/FeedsComments/FeedComments.csproj",
         "projectName": "FeedComments",
-        "projectPath": "/Users/moongoblin/Documents/Developments/feeds/services/comments/FeedComments/FeedComments.csproj",
+        "projectPath": "/Users/moongoblin/Documents/Developments/feeds/services/comments/FeedsComments/FeedComments.csproj",
         "packagesPath": "/Users/moongoblin/.nuget/packages/",
-        "outputPath": "/Users/moongoblin/Documents/Developments/feeds/services/comments/FeedComments/obj/",
+        "outputPath": "/Users/moongoblin/Documents/Developments/feeds/services/comments/FeedsComments/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "/Users/moongoblin/.nuget/NuGet/NuGet.Config"
@@ -71,6 +71,10 @@
             "Newtonsoft.Json": {
               "target": "Package",
               "version": "[13.0.2, )"
+            },
+            "Npgsql.EntityFrameworkCore.PostgreSQL": {
+              "target": "Package",
+              "version": "[7.0.1, )"
             },
             "Swashbuckle.AspNetCore": {
               "target": "Package",

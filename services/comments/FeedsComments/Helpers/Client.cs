@@ -38,12 +38,20 @@ public class Client
 
     public async Task<GetArticleDto> GetArticleById(int id)
     {
-        HttpResponseMessage response = await client.GetAsync(articleUrl + "/" + id);
+        try
+        {
+            HttpResponseMessage response = await client.GetAsync(articleUrl + "/" + id);
 
-        string bodyString = await response.Content.ReadAsStringAsync();
+            string bodyString = await response.Content.ReadAsStringAsync();
 
-        var body = JsonConvert.DeserializeObject<ResponseBody<GetArticleDto>>(bodyString);
+            var body = JsonConvert.DeserializeObject<ResponseBody<GetArticleDto>>(bodyString);
 
-        return body!.Data!;
+            return body!.Data!;
+        }
+        catch (System.Exception)
+        {
+            Console.WriteLine("Unable to find User");
+            throw;
+        }
     }
 }

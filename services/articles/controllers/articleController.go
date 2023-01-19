@@ -132,7 +132,7 @@ func GetArticle(c *gin.Context) {
 
 	result := models.DB.Find(&article, id)
 
-	if result.Error != nil {
+	if result.RowsAffected == 0 {
 		c.JSON(http.StatusBadRequest, gin.H{"data": nil, "success": false, "message": "Unable to find tag with " + id})
 		return
 	}

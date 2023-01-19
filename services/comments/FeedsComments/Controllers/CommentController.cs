@@ -40,6 +40,8 @@ public class CommentController : ControllerBase
         var response = new Response<GetArticleDto>();
         var article = await _client.GetArticleById(aid);
 
+        Console.WriteLine(article.Id);
+
         var comments = _mapper.Map<List<GetCommentDto>>(await _commentRepository.GetComments(aid));
 
         for (int i = 0; i < comments.Count; i++)

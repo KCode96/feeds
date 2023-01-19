@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "JYSfu90atmOzHQTHyDKHGeW/OMXDJThGEXvVhQnOWu2IhIK47YdQq6oocf8EwYOQUJ8mj6nfzKmV24JA/1Wagw==",
+  "dgSpecHash": "pZohGOzMOiXzELb/gdj74EQc4+vnZKWFJjN102d6S6T3jbtFbEvd1UBKVZ56dUA3Alj37AHCgdVLoAO8gR28lQ==",
   "success": true,
-  "projectFilePath": "/Users/moongoblin/Documents/Developments/feeds/services/comments/FeedComments/FeedComments.csproj",
+  "projectFilePath": "/Users/moongoblin/Documents/Developments/feeds/services/comments/FeedsComments/FeedComments.csproj",
   "expectedPackageFiles": [
     "/Users/moongoblin/.nuget/packages/automapper/12.0.0/automapper.12.0.0.nupkg.sha512",
     "/Users/moongoblin/.nuget/packages/automapper.extensions.microsoft.dependencyinjection/12.0.0/automapper.extensions.microsoft.dependencyinjection.12.0.0.nupkg.sha512",
@@ -51,6 +51,8 @@
     "/Users/moongoblin/.nuget/packages/microsoft.win32.systemevents/5.0.0/microsoft.win32.systemevents.5.0.0.nupkg.sha512",
     "/Users/moongoblin/.nuget/packages/mono.texttemplating/2.2.1/mono.texttemplating.2.2.1.nupkg.sha512",
     "/Users/moongoblin/.nuget/packages/newtonsoft.json/13.0.2/newtonsoft.json.13.0.2.nupkg.sha512",
+    "/Users/moongoblin/.nuget/packages/npgsql/7.0.1/npgsql.7.0.1.nupkg.sha512",
+    "/Users/moongoblin/.nuget/packages/npgsql.entityframeworkcore.postgresql/7.0.1/npgsql.entityframeworkcore.postgresql.7.0.1.nupkg.sha512",
     "/Users/moongoblin/.nuget/packages/scrutor/3.3.0/scrutor.3.3.0.nupkg.sha512",
     "/Users/moongoblin/.nuget/packages/sqlitepclraw.bundle_e_sqlite3/2.1.2/sqlitepclraw.bundle_e_sqlite3.2.1.2.nupkg.sha512",
     "/Users/moongoblin/.nuget/packages/sqlitepclraw.core/2.1.2/sqlitepclraw.core.2.1.2.nupkg.sha512",
