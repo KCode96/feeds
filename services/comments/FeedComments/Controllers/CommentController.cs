@@ -4,9 +4,11 @@ using FeedsComments.Interfaces;
 using FeedComments.DTOs;
 using Microsoft.AspNetCore.Authorization;
 using FeedsComments.Models;
+using Microsoft.AspNetCore.Cors;
 
 namespace FeedsComments.Controllers;
 
+[EnableCors("AllowSpecificOrigin")]
 [Authorize]
 [ApiController]
 [Route("/api/articles/{aid}/comments")]
