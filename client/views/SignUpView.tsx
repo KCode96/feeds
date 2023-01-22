@@ -30,7 +30,7 @@ export default function SignUpView() {
 
         if (isSubmitted && !error) router.push('/signin');
 
-        () => {
+        return () => {
             dispatch(reset());
         };
     }, [dispatch, error, isSubmitted, setIsSubmitted]);

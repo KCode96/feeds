@@ -19,6 +19,9 @@ export default function SignInView() {
     const router = useRouter();
 
     useEffect(() => {
+
+        console.log(isAuthenticated, error)
+
         if (error) {
             toast(error);
             return;
@@ -26,8 +29,8 @@ export default function SignInView() {
 
         if (!isAuthenticated) return;
         router.push('/');
-        
-        () => {
+
+        return () => {
             dispatch(reset());
         };
     }, [isAuthenticated, error]);
